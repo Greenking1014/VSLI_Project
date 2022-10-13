@@ -1,4 +1,4 @@
-module RegisterFile (
+module ALU (
     ports
 );
     

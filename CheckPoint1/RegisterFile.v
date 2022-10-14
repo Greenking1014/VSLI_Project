@@ -1,3 +1,8 @@
+
+module RegisterFile ();
+    
+endmodule
+=======
 // The register file - in this case it's 16 bits wide, and
 // only 17 registers deep. It's dual-ported so there 
 // are two read ports, but only one write port. 
@@ -37,3 +42,4 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
    assign rd2 = ra2 ? RAM[ra2] : 0;
 	
 endmodule 
+

@@ -3,7 +3,7 @@ module ALU #(parameter WIDTH = 16)
             (input      [WIDTH-1:0] a, b, // b is the dst 
              input      [3:0]       alucont, //opcode extension
              output reg [WIDTH-1:0] result,
-             output reg [7:0] PSR);
+             output [7:0] PSR); 
 
    wire     [WIDTH-1:0] b2, sum, slt;
    reg Z,C,F,N,L; 
@@ -11,6 +11,7 @@ module ALU #(parameter WIDTH = 16)
    assign sum = a + b2 + alucont[3];
  
    always@(*)
+   begin
         L <= 0;
         N <= 0;
         Z <= 0;
@@ -26,7 +27,7 @@ module ALU #(parameter WIDTH = 16)
             if(sum[WIDTH-1] == 1'b1) N <= 1;
            
             //setting Zero Flag
-            if(sum == 16'f0000) Z <= 1;
+            if(sum == 16'h0000) Z <= 1;
           
             //setting  the Flag bit Signed
             if(($signed(a) > 0 && $signed(b) > 0 && $signed(sum) < 0) || 
@@ -43,19 +44,23 @@ module ALU #(parameter WIDTH = 16)
             if(sum[WIDTH-1] == 1'b1) N <= 1;
            
             //setting Zero Flag
-            if(sum == 16'f0000) Z <= 1;
+            if(sum == 16'h0000) Z <= 1;
           
             //setting LOW Flag
             if (a < b) L <= 1;
 
             //setting  the Flag bit Signed, do we want a or b to be the src or dst?
-            if(($signed(a) > 0 && $signed(b) < 0 && $signed(sum) > 0) || 
-                 ($signed(a) < 0 && $signed(b) > 0 && $signed(sum) < 0) ) F <= 1;
+            if(($signed(a) > 0 && $signed(b) < 0 && $signed(sum) < 0) || 
+                 ($signed(a) < 0 && $signed(b) > 0 && $signed(sum) > 0) ) F <= 1;
           
             //setting  Carry Flag unsigned
-            if(b <= sum) C <=1;
+            if(a < sum) C <= 1;
          end
          4'b0011: result <= a ^ b;    // logical XOR
          default: result <= sum; // should never happen
       endcase
+   end
+
+assign PSR = {3'b0,Z,C,F,N,L};
+
 endmodule

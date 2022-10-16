@@ -4,7 +4,7 @@ module shifter #(
     input [WIDTH-1:0] src,
     input [WIDTH-1:0] shiftDirection,
     input shiftType,
-    output [WIDTH-1:0] shiftOut
+    output reg [WIDTH-1:0] shiftOut
 );
 
     always @(*) begin

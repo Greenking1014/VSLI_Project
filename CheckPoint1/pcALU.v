@@ -13,10 +13,12 @@ module pcALU #(parameter WIDTH = 16)(
 // jumpEN is a signal that is set by another module that takes in a condition
 // from the Bcond and Jcond. Depending on the condition bits and if the PSR
 // are set correctly for jump, jumpEN will be set on and will use the immediate
-// as new pc
+// to increment the pc counter
 // If we recieve a signal from the datapath that we want to do a jump and link
-// instruction JAL, then we set the pc to the RTarget address and set the
-// 
+// instruction JAL, then we set the pc to the RTarget address and set the 
+// Rlink output to be the previous pc + 1. There should be no situtation where
+// both enable signals are on, if no enable signal are on, then we increment pc
+// normally
 
 reg [WIDTH-1:0] RlinkBack;
 reg [WIDTH-1:0] newPC;

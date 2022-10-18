@@ -7,7 +7,7 @@ reg rst_n;
  
 UUT(
     .rst_n (rst_n),
-    .clk (clk),
+    .clk (clk)
 );
 
 localparam CLK_PERIOD = 10;

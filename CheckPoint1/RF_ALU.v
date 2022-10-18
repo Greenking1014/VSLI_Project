@@ -20,7 +20,6 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
 	input               jalEN,
     input ALUselect,
 	output [WIDTH-1: 0] Rlink,
-	output [WIDTH-1: 0] pcOut,
     output [WIDTH-1:0] result,
     output [WIDTH-1:0] pcreg,
     output [7:0] PSR
@@ -39,7 +38,7 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     // flopr #(WIDTH) aluoutUnit(clk, reset, aluResult, ALU_Out);
 
     flopr #(WIDTH) pcregUnit(clk, reset, opOutput, pcreg);
-    flopr #(WIDTH) PSRreg(clk, reset, PSRresult, PSR);
+    flopr #(8) PSRreg(clk, reset, PSRresult, PSR);
     flopr #(WIDTH) resultreg(clk, reset, opOutput, result);
     // set src1 and src2
     mux2 #(WIDTH) src1Mux(pcreg, regData1, alusrca, src1);
@@ -48,7 +47,7 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     mux2 #(WIDTH) outputMux(shiftOut, aluResult, shiftOrALU, opOutput);
     
     // pc counter doesnt care about PSR for now
-    pcALU #(WIDTH)(src1,src2,jumpEN,RTarget,jalEN,Rlink,aluResult2);
+    pcALU #(WIDTH)pc_ALU(src1,src2,jumpEN,RTarget,jalEN,Rlink,aluResult2);
     // Operational units
     shifter #(WIDTH) shifterUnit(src1, shiftDirection, shiftType, shiftOut);
     RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, writeData, regData1, regData2);

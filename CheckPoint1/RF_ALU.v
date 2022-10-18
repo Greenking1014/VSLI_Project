@@ -13,7 +13,6 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     input [WIDTH-1:0] immediate,
     input shiftType,
     input [WIDTH-1: 0]  pc,
-	    //Sign extend here or before passing to alu?
 	input			    jumpEN,
 	input [WIDTH-1: 0]  RTarget,
 	input               jalEN,
@@ -30,6 +29,7 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     wire [7:0] PSRresult;
 	wire [WIDTH-1:0] writeData;
     
+    // registers for results
     flopr #(WIDTH) pcregUnit(clk, reset, opOutput, pcreg);
     flopr #(8) PSRreg(clk, reset, PSRresult, PSR);
     flopr #(WIDTH) resultreg(clk, reset, opOutput, result);
@@ -45,7 +45,7 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     shifter #(WIDTH) shifterUnit(src1, shiftDirection, shiftType, shiftOut);
     RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, writeData, regData1, regData2);
     ALU #(WIDTH) alu_unit(src1, src2, aluControl,aluResult1, PSRresult);
-    
+    // mux select from ALU basic or pcALU
     mux2 #(WIDTH) ALUmux(aluResult1, aluResult2, ALUselect, aluResult);
 
     assign writeData = opOutput;

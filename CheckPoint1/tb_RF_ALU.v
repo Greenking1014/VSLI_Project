@@ -1,3 +1,6 @@
+/*
+*   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
+*/
 module tb_RF_ALU();
 
 	localparam WIDTH = 16, REGBITS = 4;
@@ -49,8 +52,17 @@ module tb_RF_ALU();
 		regAddress2 = 4'h2;
 		regWrite = 1;
 		
+		# 20;
 		if(result != 16'haaaa) $display("result is wrong, value obtained %h",result);
 		else $display("AND operation works correctly in the datapath");
+
+		// Testing Sum
+		# CLK_PERIOD;
+		aluControl = 4'b0101;
+		
+		if(result != 16'hffff) $display("result is wrong, value obtained %h",result);
+		else $display("SUM operation works correctly in the datapath");
+
 
 	 end
 	 

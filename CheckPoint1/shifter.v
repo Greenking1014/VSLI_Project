@@ -1,5 +1,6 @@
 
 /*
+*   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
 This module does arithmetic shifting (extends the sign value) and logical shifting (Leftshifting and rightshifting) by one bit
 arithmetic shifting : >>> and <<< 
 logical shifting : >> and <<

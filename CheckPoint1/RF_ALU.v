@@ -1,6 +1,5 @@
 /*
 *   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
-*   RF_ALU -> upper level module for checkpoint1, integrates ALU and register file.
 */
 
 module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
@@ -27,16 +26,10 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     wire [WIDTH-1:0] regData1, regData2;
     wire [WIDTH-1:0] aluResult1,aluResult2,aluResult,shiftOut;
     wire [WIDTH-1:0] src1, src2;
-    wire [WIDTH-1:0] ALU_Out, opOutput;
+    wire [WIDTH-1:0] opOutput;
     wire [7:0] PSRresult;
 	wire [WIDTH-1:0] writeData;
     
-    // // set register for reg1 data output
-    // flopr #(WIDTH) areg(clk, reset, regData1, regData1Out);
-    // // set register for reg2 data output
-    // flopr #(WIDTH) breg(clk, reset, regData2, regData2Out);
-    // flopr #(WIDTH) aluoutUnit(clk, reset, aluResult, ALU_Out);
-
     flopr #(WIDTH) pcregUnit(clk, reset, opOutput, pcreg);
     flopr #(8) PSRreg(clk, reset, PSRresult, PSR);
     flopr #(WIDTH) resultreg(clk, reset, opOutput, result);

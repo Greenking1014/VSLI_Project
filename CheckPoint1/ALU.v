@@ -1,3 +1,6 @@
+/*
+*   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
+*/
 // the ALU performs the arithmetic functions. 
 module ALU #(parameter WIDTH = 16)
             (input      [WIDTH-1:0] a, b, // b is the dst 

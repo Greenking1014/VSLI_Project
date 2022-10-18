@@ -1,3 +1,7 @@
+/*
+*   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
+*/
+
 module pcALU #(parameter WIDTH = 16)(
 	input [WIDTH-1: 0]  pc,
 	input [WIDTH-1: 0]  immediate,     //Sign extend here or before passing to alu?

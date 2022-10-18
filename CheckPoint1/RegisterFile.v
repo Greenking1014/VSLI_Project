@@ -1,3 +1,7 @@
+/*
+*   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
+*/
+
 // The register file - in this case it's 16 bits wide, and
 // only 17 registers deep. It's dual-ported so there 
 // are two read ports, but only one write port. 
@@ -19,7 +23,7 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
 	initial begin //this is only done once at the begining of the program and initializes all the registers from 0 to 15 to the value zero.
 	$display("Loading register file");
 	// you'll need to change the path to this file! //TODO: change the filepath? to a relative path
-	$readmemh("C:\\Users\\18019\\Documents\\UofU\\FALL2022\\CS3710\\16bitCPU\\sixteenBitComputer\\CheckPoint1\\InitReg.dat",RAM); 
+	$readmemh("D:\\Project_repos\\repos\\sixteenBitComputer\\CheckPoint1\\simulation\\modelsim\\InitReg.dat",RAM); 
 
 	$display("done with RF load"); 
 	end 

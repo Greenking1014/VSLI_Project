@@ -24,44 +24,44 @@
 //(including device programming or simulation files), and any 
 //associated documentation or information are expressly subject 
 //to the terms and conditions of the Intel Program License 
-//Subsinit_filecription Agreement, the Intel Quartus Prime License Agreement,
+//Subscription Agreement, the Intel Quartus Prime License Agreement,
 //the Intel FPGA IP License Agreement, or other applicable license
 //agreement, including, without limitation, that your use is for
 //the sole purpose of programming logic devices manufactured by
 //Intel and sold by Intel or its authorized distributors.  Please
 //refer to the applicable agreement for further details.
 
-module EXRAM (
-	address_a,
-	address_b,
-	clock,
-	data_a,
-	data_b,
-	wren_a,
-	wren_b,
-	q_a,
-	q_b);
+// module EXRAM (
+// 	address_a,
+// 	address_b,
+// 	clock,
+// 	data_a,
+// 	data_b,
+// 	wren_a,
+// 	wren_b,
+// 	q_a,
+// 	q_b);
 
-	input	[15:0]  address_a;
-	input	[15:0]  address_b;
-	input	  clock;
-	input	[15:0]  data_a;
-	input	[15:0]  data_b;
-	input	  wren_a;
-	input	  wren_b;
-	output	[15:0]  q_a;
-	output	[15:0]  q_b;
-`ifndef ALTERA_RESERVED_QIS
-// synopsys translate_off
-`endif
-	tri1	  clock;
-	tri0	  wren_a;
-	tri0	  wren_b;
-`ifndef ALTERA_RESERVED_QIS
-// synopsys translate_on
-`endif
+// 	input	[15:0]  address_a;
+// 	input	[15:0]  address_b;
+// 	input	  clock;
+// 	input	[15:0]  data_a;
+// 	input	[15:0]  data_b;
+// 	input	  wren_a;
+// 	input	  wren_b;
+// 	output	[15:0]  q_a;
+// 	output	[15:0]  q_b;
+// `ifndef ALTERA_RESERVED_QIS
+// // synopsys translate_off
+// `endif
+// 	tri1	  clock;
+// 	tri0	  wren_a;
+// 	tri0	  wren_b;
+// `ifndef ALTERA_RESERVED_QIS
+// // synopsys translate_on
+// `endif
 
-endmodule
+// endmodule
 
 // ============================================================
 // CNX file retrieval info
@@ -98,7 +98,7 @@ endmodule
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
 // Retrieval info: PRIVATE: MEMSIZE NUMERIC "1048576"
 // Retrieval info: PRIVATE: MEM_IN_BITS NUMERIC "0"
-// Retrieval info: PRIVATE: MIFfilename STRING "../CheckPoint2/RAM.dat"
+// Retrieval info: PRIVATE: MIFfilename STRING "RAM.mif"
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "3"
 // Retrieval info: PRIVATE: OUTDATA_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: OUTDATA_REG_B NUMERIC "1"
@@ -132,7 +132,7 @@ endmodule
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_B STRING "BYPASS"
 // Retrieval info: CONSTANT: INDATA_REG_B STRING "CLOCK0"
-// Retrieval info: CONSTANT: INIT_FILE STRING "../CheckPoint2/RAM.dat"
+// Retrieval info: CONSTANT: INIT_FILE STRING "RAM.mif"
 // Retrieval info: CONSTANT: INIT_FILE_LAYOUT STRING "PORT_A"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"

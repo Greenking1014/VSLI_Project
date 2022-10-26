@@ -99,6 +99,10 @@ module tb_shifter();
 		if(shiftOut == 16'h0000) $display("the output is hex: FFFE, it works!");
 		else $display("it is wrong, we need help, the output value for shiftOut is: %b", shiftOut);
 		
+		#20; //waiting to display the values
+		shiftDirection = 16'h0000;
+		if(shiftOut == 16'h0000) $display("the output is hex: FFFE, it works!");
+		else $display("it is wrong, we need help, the output value for shiftOut is: %b", shiftOut);
 	end	
 	
 endmodule 

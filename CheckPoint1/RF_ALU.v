@@ -29,7 +29,7 @@ module RF_ALU #(parameter WIDTH = 16, REGBITS = 4)(
     wire [7:0] PSRresult;
 	wire [WIDTH-1:0] writeData;
     
-    // registers for results 
+    // registers for results ts
     flopr #(WIDTH) pcregUnit(clk, reset, opOutput, pcreg);
     flopr #(8) PSRreg(clk, reset, PSRresult, PSR);
     flopr #(WIDTH) resultreg(clk, reset, opOutput, result);

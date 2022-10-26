@@ -52,6 +52,31 @@ initial begin
 		$display("PC did not jump and link the way it should");
 		$display("PC: %h should be %h, Rlink: %h, should be 000b", pcOut, RTarget, Rlink);
 	end
+
+	#10;
+	jumpEN <= 1;
+	jalEN <= 0;
+	immediate <= 16'hffff;
+	pc <= 16'hfff1;
+
+	// testing adding big unsigned number to negative number 
+	#10;
+	if(pcOut == 16'hfff0)
+		$display("PC incremented by the correct value");
+	 else
+		$display("PC did not increment correctly \ngot: %h should be fff0", pcOut);
+
+		#10;
+	jumpEN <= 1;
+	jalEN <= 0;
+	immediate <= 16'hfffe;
+	pc <= 16'hffff;
+
+	#10;
+	if(pcOut == 16'hfffd)
+		$display("PC incremented by the correct value");
+	 else
+		$display("PC did not increment correctly \ngot: %h should be fff0", pcOut);
 end
 
 

@@ -19,16 +19,16 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	 input [WIDTH-1:0]    shiftDir,
 	 input [7:0]          shiftAmt,
 	 input [REGBITS-1:0]  ALUcond,
-	 input					 JmpEN,
+	 input					 jumpEN,
 	 input 					 BranchEN,
-	 input                JALEN,
+	 input                jalEN,
 	 input [1:0]			 chooseResult,
 	 output [WIDTH-1:0]   memOut,
 	 output [WIDTH-1:0]   address,
 	 output [7:0] PSROut
-);
+);	
     wire [WIDTH-1:0] regData1, regData2;
-	wire [WIDTH-1:0] regAddress1, regAddress2;
+	wire [REGBITS -1:0] regAddress1, regAddress2;
     wire [WIDTH-1:0] aluResult1,aluResult2,aluResult,shiftOut;
     wire [WIDTH-1:0] src1, src2;
     wire [WIDTH-1:0] opOutput;
@@ -36,9 +36,12 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	wire [WIDTH-1:0] regDataWB;
 	wire [WIDTH-1:0] immediate;
 	wire  [15:0] instr;
-    wire [7:0] pc;
-	assign shiftDirection = immediate; 
+    wire [15:0] pc;
+	wire [WIDTH-1:0] DataOut;
+	wire [WIDTH-1:0] Rlink;
+	wire [WIDTH-1:0] shiftDirection;
 	
+
 	
     // registers for results
     flopenr #(WIDTH) pcregUnit(clk,reset,PCEN,aluResult2,pc); //enable based
@@ -56,8 +59,8 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	mux2 #(WIDTH) extend({{8{instr[7]}},instr[7:0]},{{8{1'b0}},instr[7:0]}, ZeroExtend, immediate);
 	 
 	// set src1 and src2
-    mux2 #(WIDTH) src1Mux(regData1, pc, alusrca, src1);
-    mux2 #(WIDTH) src2mux(immediate, regData2, alusrcb, src2);
+    mux2 #(WIDTH) src1Mux(regData1, pc, PCinstruction, src1);
+    mux2 #(WIDTH) src2mux(immediate, regData2, SrcB, src2);
     
 	 // output from shifter and AlU unit
     mux4 #(WIDTH) outputMUX(shiftOut, aluResult1, aluResult2, Rlink, chooseResult, DataOut);
@@ -75,5 +78,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     shifter #(WIDTH) shifterUnit(src1, shiftDirection, shiftType, shiftOut); // Check on later
     RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, regDataWB, regData1, regData2);
     ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);
+
+	assign shiftDirection = immediate;
 
 endmodule 

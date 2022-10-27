@@ -7,7 +7,7 @@ module tb_datapathDraft #(parameter WIDTH = 16, REGBITS = 4);
 	      nextInstruction, updateAddress,
 	 	  StoreReg, WriteData,regWrite,
 	  	ZeroExtend, PCinstruction,SrcB,
-	 	shiftType, JmpEN,BranchEN,JALEN;
+	 	shiftType, jumpEN,BranchEN,jalEN;
 
 	 reg [WIDTH-1:0]    shiftDir,  memdata;
 	 reg [7:0]          shiftAmt;
@@ -35,9 +35,9 @@ module tb_datapathDraft #(parameter WIDTH = 16, REGBITS = 4);
 	.shiftDir(shiftDir),
 	.shiftAmt(shiftAmt),
 	.ALUcond(ALUcond),
-	.JmpEN(JmpEN),
+	.jumpEN(jumpEN),
 	.BranchEN(BranchEN),
-	.JALEN(JALEN),
+	.jalEN(jalEN),
 	.chooseResult(chooseResult),
 	.memOut(memOut),
 	.address(address),
@@ -52,7 +52,7 @@ localparam CLK_PERIOD = 10;
 	      nextInstruction, updateAddress,
 	 	  StoreReg, WriteData,regWrite,
 	  	ZeroExtend, PCinstruction,SrcB,
-	 	shiftType, JmpEN,BranchEN,JALEN} <= 16'h0;
+	 	shiftType, jumpEN,BranchEN,jalEN} <= 16'h0;
 
 	{shiftDir,  memdata} <= 32'h0;
 	shiftAmt <= 8'h0;
@@ -63,6 +63,12 @@ localparam CLK_PERIOD = 10;
 	 initial begin
 		# CLK_PERIOD reset = 1;
 		# CLK_PERIOD reset = 0;
+
+		
+
+
+
+
 	 end
 
 endmodule

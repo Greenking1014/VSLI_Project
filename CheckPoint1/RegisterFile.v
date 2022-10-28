@@ -33,7 +33,7 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
    //   read two ports combinationally
    //   write third port on rising edge of clock
    always @(posedge clk)
-      if (regwrite) RAM[ra2] <= wd;
+      if (regwrite) RAM[ra1] <= wd;
 	
    // register 0 is hardwired to 0 //TODO, WHAT SHOULD WE DO ABOUT THIS?(keeps it as is?) (QUESTIONS: what should we do with register 0?)
    assign rd1 = ra1 ? RAM[ra1] : 0;

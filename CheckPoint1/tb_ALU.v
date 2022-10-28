@@ -86,6 +86,7 @@ initial begin
     if(tb_result != 16'h0000 && tb_PSR != 8'b00011000) $display("error in Sum operation result is %h, PSR value : %b",tb_result,tb_PSR);
     else $display("Sum operation and condition flags are working as supposed");
 
+
     //Testing the condition codes  this tests sign and overflow flag
     # CLK_PERIOD;
     //PSR <= {3'b0,Z,C,F,N,L};
@@ -157,6 +158,27 @@ initial begin
     if(tb_result != 16'h0001 && tb_PSR != 8'b00000100) $display("error in Sub operation result is %h, PSR value : %b",tb_result,tb_PSR);
     else $display("Sub operation and condition flags are working as supposed");
 
+
+    //Testing the condition codes for Carry flag 
+    # CLK_PERIOD;
+    //PSR <= {3'b0,Z,C,F,N,L};
+    tb_a <= 16'hffff;
+    tb_b <= 16'haaaa;
+    tb_alucont <= 4'b0000;
+    #5;
+    if(tb_result != 16'h0000 && tb_PSR != 8'b00011000) $display("error in Sum operation result is %h, PSR value : %b",tb_result,tb_PSR);
+    else $display("Sum operation and condition flags are working as supposed");
+
+    // Testing Subtraction and Condition flags
+    //Testing the zero flag
+    # CLK_PERIOD;
+    //PSR <= {3'b0,Z,C,F,N,L};
+    tb_a <= 16'haaaa;
+    tb_b <= 16'hffff;
+    tb_alucont <= 4'b0101;
+    #5;
+    if(tb_result != 16'h0000 && tb_PSR != 8'b00010000) $display("error in Sub operation result is %h, PSR value : %b",tb_result,tb_PSR);
+    else $display("Sub operation and condition flags are working as supposed");
 end
 
 endmodule

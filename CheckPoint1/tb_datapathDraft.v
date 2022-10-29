@@ -7,7 +7,7 @@ module tb_datapathDraft #(parameter WIDTH = 16, REGBITS = 4);
 	      nextInstruction, updateAddress,
 	 	  StoreReg, WriteData,regWrite,
 	  	ZeroExtend, PCinstruction,SrcB,
-	 	shiftType, JmpEN,BranchEN,JALEN;
+	 	shiftType,resultEn, jumpEN,BranchEN,jalEN;
 
 	 reg [WIDTH-1:0]    shiftDir,  memdata;
 	 reg [7:0]          shiftAmt;
@@ -32,12 +32,13 @@ module tb_datapathDraft #(parameter WIDTH = 16, REGBITS = 4);
 	.PCinstruction(PCinstruction),
 	.SrcB(SrcB),
 	.shiftType(shiftType),
+	.resultEn(resultEn),
 	.shiftDir(shiftDir),
 	.shiftAmt(shiftAmt),
 	.ALUcond(ALUcond),
-	.JmpEN(JmpEN),
+	.jumpEN(jumpEN),
 	.BranchEN(BranchEN),
-	.JALEN(JALEN),
+	.jalEN(jalEN),
 	.chooseResult(chooseResult),
 	.memOut(memOut),
 	.address(address),
@@ -52,7 +53,7 @@ localparam CLK_PERIOD = 10;
 	      nextInstruction, updateAddress,
 	 	  StoreReg, WriteData,regWrite,
 	  	ZeroExtend, PCinstruction,SrcB,
-	 	shiftType, JmpEN,BranchEN,JALEN} <= 16'h0;
+	 	shiftType, jumpEN,BranchEN,jalEN,resultEn} <= 17'h0;
 
 	{shiftDir,  memdata} <= 32'h0;
 	shiftAmt <= 8'h0;
@@ -63,6 +64,120 @@ localparam CLK_PERIOD = 10;
 	 initial begin
 		# CLK_PERIOD reset = 1;
 		# CLK_PERIOD reset = 0;
+
+		// testing datapath 
+		// Addition memdata = 0x0152 -> R1 = R1 + R2
+		// dstreg is ffff dstsrc aaaa 
+		// NOTES: we expect the result to be aaa9 the PSR to be updated the adress should be 0000 because we have to
+		// increment pc in a different state. Destination register should have the value of the result store to it.
+		
+		WriteData = 1;
+		nextInstruction = 1;
+		SrcB = 1;
+		memdata = 16'h0152;
+		updateAddress = 1;
+		chooseResult = 2'b01;
+		regWrite = 1;
+		PSREN = 1;
+		ALUcond = 4'b0101;
+		resultEn = 1;
+
+		# CLK_PERIOD;
+		
+		if(memOut != 16'haaa9) $display("the result of the sum op is incorrect, the value was: %h",memOut);
+		else $display("the result of the sum op is correct");
+
+		# CLK_PERIOD; // waiting two cycles to get the right value for psr
+		PSREN = 0;
+		
+		if(PSROut != 8'h0a) $display("the result of the PSR is incorrect, the value was: %h",PSROut);
+		else $display("the result of PSR is correct");
+		
+		if(UUT.regFile.rd1 != 16'haaa9)  $display("the result stored in the Register Destination is incorrect, the value was: %h",UUT.regFile.RAM[4'b0001]);
+		else $display("the result is stored in the destination register is correct");
+
+
+		// testing the pc path to see if it increases by one
+		# CLK_PERIOD; 
+		PCEN = 1;
+		updateAddress = 1;
+		PCinstruction = 1;
+		resultEn = 1;
+		# CLK_PERIOD;
+		PCEN = 0;
+		if(address != 16'h0001) $display("the result of the PCis incorrect, the value was: %h",address);
+		else $display("the result of PSR is correct");
+
+
+		// testing sign extend path to pc
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+		
+		#CLK_PERIOD;
+		nextInstruction = 1;
+		memdata = 16'h0182;
+		resultEn = 1;
+
+		#CLK_PERIOD;
+		SrcB = 0;
+		PCEN = 1;
+		BranchEN = 1;
+
+		#CLK_PERIOD;
+		PCEN = 0;
+		
+
+		if(address != 16'hFF82) $display("the result of the PCis incorrect, the value was: %h",address);
+		else $display("the value for address is correct");
+
+
+		// testing zero extend path to pc
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+		
+		#CLK_PERIOD;
+		nextInstruction = 1;
+		memdata = 16'h0182;
+		
+		
+		#CLK_PERIOD;
+		SrcB = 0;
+		PCEN = 1;
+		BranchEN = 1;
+		ZeroExtend = 1;
+		chooseResult = 2'b10;
+		resultEn = 1;
+
+		#CLK_PERIOD;
+		PCEN = 0;
+
+		if(address != 16'h0082 && memOut != 16'h0082) $display("the result of the PC is incorrect, the value was: %h the value of memOUT is incorrect should be %h",address,memOut);
+		else $display("the value for address and memOut is correct");
+
+
+		// testing JAL path 
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+
+		#CLK_PERIOD;
+		nextInstruction = 1;
+		memdata = 16'h0384;
+
+		#CLK_PERIOD;
+		SrcB = 1;
+		PCEN = 1;
+		resultEn = 1;
+		
+		jalEN = 1;
+		chooseResult = 2'b11;
+
+	    #CLK_PERIOD;
+		PCEN = 0;
+
+		if(address != 16'hbbbb && memOut != 16'h0001) $display("the result of the PC is incorrect, the value was: %h the value of memOUT is incorrect should be %h",address,memOut);
+		else $display("the value for address and memOut is correct");
+
+
 	 end
 
 endmodule

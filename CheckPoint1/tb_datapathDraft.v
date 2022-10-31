@@ -177,6 +177,64 @@ localparam CLK_PERIOD = 10;
 		if(address != 16'hbbbb && memOut != 16'h0001) $display("the result of the PC is incorrect, the value was: %h the value of memOUT is incorrect should be %h",address,memOut);
 		else $display("the value for address and memOut is correct");
 
+		
+		// Test storeReg =1, where the first reg/ regDst data is memOut
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+
+		#CLK_PERIOD;
+		regWrite = 0;
+		nextInstruction = 1;
+		memdata = 16'h0484;
+
+		#CLK_PERIOD;
+		StoreReg = 1;
+
+		#CLK_PERIOD;
+		PCEN = 0;
+		
+		if(memOut != 16'hbbbb) $display("the data set to memory is incorrect the value obtain was %h and it should be %h ",memOut,UUT.regFile.rd1);
+		else $display("the value for address and memOut is correct");
+
+		// Test WriteData = 0, where memData or data input is stored to redDst
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+
+		#CLK_PERIOD;
+		regWrite = 1;
+		WriteData = 0;
+		nextInstruction = 1;
+		memdata = 16'hfbaf;
+
+		#CLK_PERIOD;
+		StoreReg = 1;
+
+		#CLK_PERIOD;
+		PCEN = 0;
+		
+		if(memOut != 16'hfbaf) $display("the data set to memory is incorrect the value obtain was %h and it should be %h ",memOut,UUT.regFile.rd1);
+		else $display("the value for address and memOut is correct");
+
+		//Test shifter and choosing shifter result expecting 5555 shifting right aaaa
+		# CLK_PERIOD reset = 1;
+		# CLK_PERIOD reset = 0;
+
+		PCinstruction = 0;
+		nextInstruction = 1;
+
+		#CLK_PERIOD;
+		memdata = 16'haaaa;
+		shiftDir = 16'hFFFF;
+		regWrite = 1;
+		shiftType = 0;
+		WriteData = 1;
+		#CLK_PERIOD;
+		chooseResult = 2'b00;
+		StoreReg = 0;
+
+		if(memOut != 16'h5555) $display("the data set to memory is incorrect the value obtain was %h and it should be %h ",memOut,UUT.regFile.rd1);
+		else $display("the value for address and memOut is correct");
+		
 
 	 end
 

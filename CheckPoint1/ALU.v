@@ -8,7 +8,7 @@ module ALU #(parameter WIDTH = 16)
              output reg [WIDTH-1:0] result,
              output [7:0] PSR); 
 
-   wire     [WIDTH-1:0] b2, sum, slt;
+   wire     [WIDTH-1:0] b2, sum;
    reg Z,C,F,N,L; 
    assign b2 = alucont[3] ? ~b:b; // looks at MSB to determined signed or unsigned
    assign sum = a + b2 + alucont[3];

@@ -23,7 +23,7 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
 	initial begin //this is only done once at the begining of the program and initializes all the registers from 0 to 15 to the value zero.
 	$display("Loading register file");
 	// you'll need to change the path to this file! //TODO: change the filepath? to a relative path
-	$readmemh("C:\\Users\\18019\\Documents\\UofU\\FALL2022\\CS3710\\16bitCPU\\sixteenBitComputer\\CheckPoint1\\InitReg.dat",RAM); 
+	$readmemh("C:\\Users\\18019\\Documents\\UofU\\FALL2022\\CS3710\\16bitCPU\\sixteenBitComputer\\CheckPoint1\\initReg.dat",RAM); 
 
 	$display("done with RF load"); 
 	end 
@@ -33,7 +33,7 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
    //   read two ports combinationally
    //   write third port on rising edge of clock
    always @(posedge clk)
-      if (regwrite) RAM[ra2] <= wd;
+      if (regwrite) RAM[ra1] <= wd;
 	
    // register 0 is hardwired to 0 //TODO, WHAT SHOULD WE DO ABOUT THIS?(keeps it as is?) (QUESTIONS: what should we do with register 0?)
    assign rd1 = ra1 ? RAM[ra1] : 0;

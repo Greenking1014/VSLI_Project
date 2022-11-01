@@ -93,7 +93,7 @@ localparam CLK_PERIOD = 10;
 		if(PSROut != 8'h0a) $display("the result of the PSR is incorrect, the value was: %h",PSROut);
 		else $display("the result of PSR is correct");
 		
-#CLK_PERIOD;
+		#CLK_PERIOD;
 
 		if(UUT.regFile.rd1 != 16'haaa9)  $display("the result stored in the Register Destination is incorrect, the value was: %h",UUT.regFile.RAM[4'b0001]);
 		else $display("the result is stored in the destination register is correct");

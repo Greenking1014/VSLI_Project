@@ -4,46 +4,46 @@ module controlFSM #(
     input clk, reset,
     input [3:0] opCode1, opCode2, conditionCode, shiftAmtIn,
     input [7:0] PSR,
-    output storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN
-    output updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
-    output regWriteEN, PCinstruction,
-    output [3:0] shifterControl, ALUcontrol,
+    output reg storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN,
+    output reg updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
+    output reg regWriteEN, PCinstruction,
+    output reg [3:0] shifterControl, ALUcontrol,
     output [3:0] shiftAmtOut,
-    output [1:0] result
+    output reg [1:0] result
 );
     /// Stages of Execution parameters Start
-    parameter FETCH = 5'h0 DECODE = 5'h1;
-    parameter ITYPEEX = 5'h3, ITYPEWR = 5'h4;
-    parameter SHIFTEX = 5'h5, SHIFTWR = 5'h6
-    parameter LBRD = 5'h7, LBWR = 5'h8; 
-    parameter SBWR = 5'h9;
-    parameter RTYPEEX = 5'ha, RTYPEWR = 5'hb;
-    parameter BCONDEX = 5'hc;
-    parameter MEMADR = 5'hd;
-    parameter JALEX = 5'he, JALWR = 5'hf;
-    parameter JCONDEX = 5'h10;
+    localparam FETCH = 5'h0, DECODE = 5'h1;
+    localparam ITYPEEX = 5'h3, ITYPEWR = 5'h4;
+    localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6;
+    localparam LBRD = 5'h7, LBWR = 5'h8; 
+    localparam SBWR = 5'h9;
+    localparam RTYPEEX = 5'ha, RTYPEWR = 5'hb;
+    localparam BCONDEX = 5'hc;
+    localparam MEMADR = 5'hd;
+    localparam JALEX = 5'he, JALWR = 5'hf;
+    localparam JCONDEX = 5'h10;
     /// Stages of Execution parameters End
 
     /// Decode stage parameters Start
-    parameter RTYPE =  4'h0;
+    localparam RTYPE =  4'h0;
     // I-Type Decode start
-    parameter ADDI = 4'h5, SUBI = 4'h9;
-    parameter CMPI = 4'hb;
-    parameter ANDI = 4'h1, ORI = 4'h2, XORI = 4'h3;
-    parameter MOVI = 4'hd;
-    parameter LUI = 4'hf;
-    parameter LB = 4'h0;
-    parameter SB = 4'h4;
-    parameter JAL = 4'h8;
-    parameter JCOND = 4'ha;
+    localparam ADDI = 4'h5, SUBI = 4'h9;
+    localparam CMPI = 4'hb;
+    localparam ANDI = 4'h1, ORI = 4'h2, XORI = 4'h3;
+    localparam MOVI = 4'hd;
+    localparam LUI = 4'hf;
+    localparam LB = 4'h0;
+    localparam SB = 4'h4;
+    localparam JAL = 4'h8;
+    localparam JCOND = 4'ha;
     // I-Type Decode end
-    parameter MEM_INSTRUCTION =  4'h4;
-    parameter SHIFT_INSTURCTION = 4'h8;
-    parameter BCOND =  4'hc;
+    localparam MEM_INSTRUCTION =  4'h4;
+    localparam SHIFT_INSTRUCTION = 4'h8;
+    localparam BCOND =  4'hc;
     /// Decode stage parameters End
 
     /// FSM State vars 
-    reg [3:0] state, nextstate;
+    reg [4:0] state, nextstate;
     reg passesCond;
     wire [4:0] PSRvals = PSR[4:0];
 
@@ -99,7 +99,7 @@ module controlFSM #(
             
             BCONDEX:   nextstate <= FETCH;
             
-            JALEX:     nextstate <= JWR;
+            JALEX:     nextstate <= JALWR;
             JALWR:     nextstate <= FETCH;
             
             JCONDEX:  nextstate <= FETCH;
@@ -113,7 +113,10 @@ always @(*) begin
         storeReg <= 0;
         zeroExtend <= 1;
         SrcB <= 1;
-        JmpEN <= 0; BranchEN <= 0, JALEN <= 0, PCEN <= 0;
+        JmpEN <= 0;
+        BranchEN <= 0;
+        JALEN <= 0;
+        PCEN <= 0;
         resultEN <= 0;
         immediateRegEN <= 0;
         updateAddress <= 1;
@@ -123,7 +126,8 @@ always @(*) begin
         PSREN <= 0;
         regWriteEN <= 0;
         PCinstruction <= 0;
-        shifterControl <= 4'h0, ALUcontrol <= 4'h5;
+        shifterControl <= 4'h0;
+		  ALUcontrol <= 4'h5;
         result <= 2'h1;
         case(state)
             FETCH: 
@@ -133,7 +137,7 @@ always @(*) begin
             DECODE:
                 begin
                     if(opCode2 & 4'h8) begin
-                        zeroExtend <= (opCode1 == 4'h1 || opCode1 == 4'h2 || opCode1 == 4'h3 || opCode1 == 4'hd) ? 1: 0;
+                        zeroExtend <= (opCode1 == 4'h1 || opCode1 == 4'h2 || opCode1 == 4'h3 || opCode1 == 4'hd) ? 1'b1: 1'b0;
                     end
                     SrcB <= 0;
                     immediateRegEN <= 1;
@@ -144,8 +148,6 @@ always @(*) begin
                 end
             MEMADR:
                 begin
-                    alusrca <= 1;
-                    alusrcb <= 2'b10;
                 end
             LBRD:
                 begin
@@ -190,29 +192,29 @@ always @(*) begin
             SHIFTEX:
                 begin
                     if(opCode1 != LUI) begin
-                        SrcB <= (opCode2 == 4'h4) ? 1: 0;
+                        SrcB <= (opCode2 == 4'h4) ? 1'b1: 1'b0;
                     end
                     else begin
                         SrcB <= 0;
                     end
-                    shifterControl <= (opCode1 != LUI) opCode2: opCode1;
+                    shifterControl <= (opCode1 != LUI) ? opCode2: opCode1;
                     result <= 2'h0;
                     resultEN <= 1; 
                 end
             SHIFTWR:
                 begin
-                    regWriteEn <= 1;
+                    regWriteEN <= 1;
                 end
             BCONDEX:
                 begin
-                    branchEN <= passesCond;
+                    BranchEN <= passesCond;
                     PCinstruction <= 1;
                     SrcB <= 0;
                     PCEN <= 1;    
                 end
             JALEX:
                 begin
-                    jalEN <= 1;
+                    JALEN <= 1;
                     PCinstruction <= 1;
                     result <= 2'b11;
                     resultEN <= 1;
@@ -220,11 +222,11 @@ always @(*) begin
                 end
             JALWR:
                 begin
-                    regWrite <= 1;
+                    regWriteEN <= 1;
                 end
             JCONDEX:
                 begin
-                    jumpEN <= passesCond;
+                    JmpEN <= passesCond;
                     PCinstruction <= 1;
                     PCEN <= 1;
                 end

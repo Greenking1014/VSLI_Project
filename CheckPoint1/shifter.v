@@ -20,7 +20,7 @@ module shifter #(
     input [3:0] opCode,
     output reg signed [WIDTH-1:0] shiftOut
 );
-    parameter LSHI_LEFT = 4'h0, LSHI_RIGHT = 4'h1, LSH = 4'h4, LUI = 4'hf;
+    localparam LSHI_LEFT = 4'h0, LSHI_RIGHT = 4'h1, LSH = 4'h4, LUI = 4'hf;
     always @(*) begin
         case (opCode)
             LSHI_LEFT:
@@ -33,7 +33,7 @@ module shifter #(
                 end
             LSH:
                 begin
-                    shiftOut <= (SrcA[4]) ? src >> SrcA[3:0]: src << SrcA[3:0];
+                    shiftOut <= (SrcA[4]) ? SrcA >> SrcB[3:0]: SrcA << SrcB[3:0];
                 end
             LUI:
                 begin
@@ -41,7 +41,7 @@ module shifter #(
                 end
             default:
                 begin
-                    shiftAmt <= SrcA;
+                    shiftOut <= SrcA;
                 end
         endcase
     end

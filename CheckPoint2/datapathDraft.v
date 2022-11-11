@@ -35,7 +35,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     wire [WIDTH-1:0] opOutput;
     wire [7:0]       PSRresult;
 	wire [WIDTH-1:0] regDataWB;
-	wire [WIDTH-1:0] immediate, immediateReg;
+	wire [WIDTH-1:0] immediate, immediateRegVal;
 	wire  [15:0] instr;
     wire [15:0] pc;
 	wire [WIDTH-1:0] Rlink;
@@ -49,7 +49,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     flopenr #(8) PSRreg(clk,reset,PSREN,PSRresult,PSROut);	// out to the control unit
     flopenr #(WIDTH) instrReg(clk,reset,nextInstruction,memdata,instr);
 	flopenr #(WIDTH) resultReg(clk,reset,resultEn,newResult,result);
-	flopenr #(WIDTH) immediateReg(clk, reset, immediateRegEN, immediate, immediateReg);
+	flopenr #(WIDTH) immediateReg(clk, reset, immediateRegEN, immediate, immediateRegVal);
 
     
 	// set Reg Addresses for src1 and src2

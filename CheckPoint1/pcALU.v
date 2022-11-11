@@ -35,7 +35,7 @@ always@(*) begin
 		RlinkBack <= pc + 1;
 	end
 	else if(jumpEN) newPC <= src2;        // Here src2 is Rtarget / Address
-	else if(branchEN) newPC <= pc + signed(src2); // Here src2 is the immediate
+	else if(branchEN) newPC <= pc + $signed(src2); // Here src2 is the immediate
 	else newPC <= pc + 1;
 end
 

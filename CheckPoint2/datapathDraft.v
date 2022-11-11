@@ -17,6 +17,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	 input					 SrcB,
 	 input					 shiftType,
 	 input					resultEn,
+	 input					immediateRegEN,
 	 input [WIDTH-1:0]    shiftDir,
 	 input [7:0]          shiftAmt,
 	 input [REGBITS-1:0]  ALUcond,
@@ -35,7 +36,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     wire [WIDTH-1:0] opOutput;
     wire [7:0]       PSRresult;
 	wire [WIDTH-1:0] regDataWB;
-	wire [WIDTH-1:0] immediate;
+	wire [WIDTH-1:0] immediate, immediateReg;
 	wire  [15:0] instr;
     wire [15:0] pc;
 	wire [WIDTH-1:0] Rlink;
@@ -49,6 +50,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     flopenr #(8) PSRreg(clk,reset,PSREN,PSRresult,PSROut);	// out to the control unit
     flopenr #(WIDTH) instrReg(clk,reset,nextInstruction,memdata,instr);
 	flopenr #(WIDTH) resultReg(clk,reset,resultEn,newResult,result);
+	flopenr #(WIDTH) immediateReg(clk, reset, immediateRegEN, immediate, immediateReg);
 
     
 	// set Reg Addresses for src1 and src2
@@ -63,7 +65,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	 
 	// set src1 and src2
     mux2 #(WIDTH) src1Mux(regData1, pc, PCinstruction, src1);
-    mux2 #(WIDTH) src2mux(immediate, regData2, SrcB, src2);
+    mux2 #(WIDTH) src2mux(immediateReg, regData2, SrcB, src2);
     
 	 // output from shifter and AlU unit
     mux4 #(WIDTH) outputMUX(shiftOut, aluResult1, aluResult2, Rlink, chooseResult, newResult);
@@ -82,7 +84,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, regDataWB, regData1, regData2);
     ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);
 
-	assign shiftDirection = immediate;
+	assign shiftDirection = immediate; // Need to change this
 	
 
 endmodule 

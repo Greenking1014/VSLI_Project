@@ -14,17 +14,35 @@ when shiftDirection is FFFF (hex and signed for -1) it will shift right, or when
 module shifter #(
     parameter WIDTH = 16
 ) (
-    input signed [WIDTH-1:0] src,
-    input shiftDirection,
+    input signed [WIDTH-1:0] SrcA,
+    input signed [WIDTH-1:0] SrcB,
     input [3:0] shiftAmt,
-    input shiftType,
+    input [3:0] opCode,
     output reg signed [WIDTH-1:0] shiftOut
 );
-
+    parameter LSHI_LEFT = 4'h0, LSHI_RIGHT = 4'h1, LSH = 4'h4, LUI = 4'hf;
     always @(*) begin
-	 
-        if(shiftDirection == 16'hFFFF) shiftOut <= (shiftType) ? src >> 1: $signed(src) >>> 1;
-        else if(shiftDirection == 16'h0001) shiftOut <= (shiftType) ? src << 1: $signed(src) <<< 1;
-        else shiftOut <= src;
+        case (opCode)
+            LSHI_LEFT:
+                begin
+                    shiftOut <= SrcA << shiftAmt;
+                end
+            LSHI_RIGHT:
+                begin
+                    shiftOut <= SrcA >> shiftAmt;
+                end
+            LSH:
+                begin
+                    shiftOut <= (SrcA[4]) ? src >> SrcA[3:0]: src << SrcA[3:0];
+                end
+            LUI:
+                begin
+                    shiftOut <= SrcB << 4'h8; 
+                end
+            default:
+                begin
+                    shiftAmt <= SrcA;
+                end
+        endcase
     end
 endmodule

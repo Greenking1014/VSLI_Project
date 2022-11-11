@@ -4,30 +4,29 @@
 
 module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     input                clk, reset,
-	 input [WIDTH-1:0]    memdata,
-	 input                PCEN,
-	 input					 PSREN,
-	 input                   nextInstruction,
-	 input					 updateAddress,
-	 input					 StoreReg,
-	 input					 WriteData,
-	 input					 regWrite,
-	 input 					 ZeroExtend,
-	 input					 PCinstruction,
-	 input					 SrcB,
-	 input					 shiftType,
-	 input					resultEn,
-	 input					immediateRegEN,
-	 input [WIDTH-1:0]    shiftDir,
-	 input [7:0]          shiftAmt,
-	 input [REGBITS-1:0]  ALUcond,
-	 input					 jumpEN,
-	 input 					 BranchEN,
-	 input                jalEN,
-	 input [1:0]			 chooseResult,
-	 output [WIDTH-1:0]   memOut,
-	 output [WIDTH-1:0]   address,
-	 output [7:0] PSROut
+	input [WIDTH-1:0]    memdata,
+	input                PCEN,
+	input					 PSREN,
+	input                   nextInstruction,
+	input					 updateAddress,
+	input					 StoreReg,
+	input					 WriteData,
+	input					 regWrite,
+	input 					 ZeroExtend,
+	input					 PCinstruction,
+	input					 SrcB,
+	input					resultEn,
+	input					immediateRegEN,
+	input [REGBITS-1:0]	shiftAmt,
+	input [REGBITS-1:0]	shifterControl,
+	input [REGBITS-1:0]  ALUcond,
+	input					 jumpEN,
+	input 					 BranchEN,
+	input                jalEN,
+	input [1:0]			 chooseResult,
+	output [WIDTH-1:0]   memOut,
+	output [WIDTH-1:0]   address,
+	output [7:0] PSROut
 );	
     wire [WIDTH-1:0] regData1, regData2;
 	wire [REGBITS -1:0] regAddress1, regAddress2;
@@ -80,11 +79,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
     pcALU #(WIDTH) pc_ALU(src1,src2,jumpEN,jalEN,BranchEN,Rlink,aluResult2);
     
 	 // Operational units
-    shifter #(WIDTH) shifterUnit(src1, shiftDirection, shiftType, shiftOut); // Check on later
+    shifter #(WIDTH) shifterUnit(src1, src2, shiftAmt, shifterControl, shiftOut);
     RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, regDataWB, regData1, regData2);
-    ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);
-
-	assign shiftDirection = immediate; // Need to change this
-	
-
+    ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);	
 endmodule 

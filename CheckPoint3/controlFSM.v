@@ -2,23 +2,25 @@ module controlFSM #(
     parameter WIDTH = 16, REGBITS = 4
 ) (
     input clk, reset,
-    input [3:0] opCode1, opCode2, conditionCode,
+    input [3:0] opCode1, opCode2, conditionCode, shiftAmtIn,
     input [7:0] PSR,
     output storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN
     output updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
-    output regWriteEN, PCinstruction, shiftDir, logicalOrArithmetic,
-    output [3:0] shiftAmt, ALUcontrol,
+    output regWriteEN, PCinstruction,
+    output [3:0] shifterControl, ALUcontrol,
+    output [3:0] shiftAmtOut,
     output [1:0] result
 );
     /// Stages of Execution parameters Start
-    parameter FETCH = 4'h0 DECODE = 4'h1;
-    parameter MEMADR = 4'h2;
-    parameter ITYPEEX = 4'h3, ITYPEWR = 4'h4;
-    parameter LBRD = 4'h7, LBWR = 4'h8; 
-    parameter SBWR = 4'h9;
-    parameter RTYPEEX = 4'ha, RTYPEWR = 4'hb;
-    parameter BEQEX = 4'hc;
-    parameter JEX = 4'hd;
+    parameter FETCH = 5'h0 DECODE = 5'h1;
+    parameter MEMADR = 5'h2;
+    parameter ITYPEEX = 5'h3, ITYPEWR = 5'h4;
+    parameter SHIFTEX = 5'h5, SHIFTWR = 5'h6
+    parameter LBRD = 5'h7, LBWR = 5'h8; 
+    parameter SBWR = 5'h9;
+    parameter RTYPEEX = 5'ha, RTYPEWR = 5'hb;
+    parameter BEQEX = 5'hc;
+    parameter JEX = 5'hd;
     /// Stages of Execution parameters End
 
     /// Decode stage parameters Start
@@ -51,6 +53,9 @@ module controlFSM #(
                         MEM_INSTRUCTION:    nextstate <= MEMADR;
 
                         RTYPE:  nextstate <= RTYPEEX;
+
+                        SHIFT_INSTRUCTION: nextstate <= SHIFTEX;
+                        LUI:  nextstate <= SHIFTEX;  
                         
                         ADDI:   nextstate <= ITYPEEX;
                         SUBI:   nextstate <= ITYPEEX;
@@ -60,8 +65,6 @@ module controlFSM #(
                         ORI:    nextstate <= ITYPEEX;
                         XORI:   nextstate <= ITYPEEX;
                         MOVI:   nextstate <= ITYPEEX;
-
-                        LUI:
 
                         Bcond:     nextstate <= BEQEX;
                         // Implemented for ADDI instruction.
@@ -80,13 +83,16 @@ module controlFSM #(
             
             RTYPEEX: nextstate <= RTYPEWR;
             RTYPEWR: nextstate <= FETCH;
+
+            ITYPEEX: nextstate <= ITYPEWR;
+            ITYPEWR: nextstate <= FETCH;
+
+            SHIFTEX: nextstate <= SHIFTWR;
+            SHIFTWR: nextstate <= FETCH;
             
             BEQEX:   nextstate <= FETCH;
             
             JEX:     nextstate <= FETCH;
-
-            ITYPEEX: nextstate <= ITYPEWR;
-            ITYPEWR: nextstate <= FETCH;
             
             default: nextstate <= FETCH; // should never happen
         endcase
@@ -107,9 +113,7 @@ always @(*) begin
         PSREN <= 0;
         regWriteEN <= 0;
         PCinstruction <= 0;
-        shiftDir <= 0;
-        logicalOrArithmetic <= 0;
-        shiftAmt <= 0000, ALUcontrol <= 0101;
+        shifterControl <= 4'h0, ALUcontrol <= 4'h5;
         result <= 2'h1;
         case(state)
             FETCH: 
@@ -117,9 +121,6 @@ always @(*) begin
                     nextInstruction <= 1;
                     PCinstruction <= 1;
                     PCEN <= 1;
-                    // irwrite <= 4'b0001; // change to reflect new memory ordering
-                    // alusrcb <= 2'b01;   // get the IR bits in the right spots
-                    // pcwrite <= 1;       // FETCH 2,3,4 also changed... 
                 end
             DECODE:
                 begin
@@ -160,19 +161,6 @@ always @(*) begin
                         regWriteEN <= 1;
                     end
                 end
-            BEQEX:
-                begin
-                    alusrca     <= 1;
-                    aluop       <= 2'b01;
-                    pcwritecond <= 1;
-                    pcsource    <= 2'b01;
-                end
-            JEX:
-                begin
-                    pcwrite  <= 1;
-                    pcsource <= 2'b10;
-                end
-            // States for ITYPE instruction cycle
             ITYPEEX:
                 begin
                     ALUcontrol <= opCode1;
@@ -186,7 +174,35 @@ always @(*) begin
                         regWriteEN <= 1;
                     end
                 end
-                // end changes
+            SHIFTEX:
+                begin
+                    if(opCode1 != LUI) begin
+                        SrcB <= (opCode2 == 4'h4) ? 1: 0;
+                    end
+                    else begin
+                        SrcB <= 0;
+                    end
+                    shifterControl <= (opCode1 != LUI) opCode2: opCode1;
+                    result <= 2'h0;
+                    resultEN <= 1; 
+                end
+            SHIFTWR:
+                begin
+                    regWriteEn <= 1;
+                end
+            BEQEX:
+                begin
+                    alusrca     <= 1;
+                    aluop       <= 2'b01;
+                    pcwritecond <= 1;
+                    pcsource    <= 2'b01;
+                end
+            JEX:
+                begin
+                    pcwrite  <= 1;
+                    pcsource <= 2'b10;
+                end
         endcase
     end
+    assign shiftAmtOut = shiftAmtIn;
 endmodule

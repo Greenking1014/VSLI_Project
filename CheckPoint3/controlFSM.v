@@ -13,14 +13,15 @@ module controlFSM #(
 );
     /// Stages of Execution parameters Start
     parameter FETCH = 5'h0 DECODE = 5'h1;
-    parameter MEMADR = 5'h2;
     parameter ITYPEEX = 5'h3, ITYPEWR = 5'h4;
     parameter SHIFTEX = 5'h5, SHIFTWR = 5'h6
     parameter LBRD = 5'h7, LBWR = 5'h8; 
     parameter SBWR = 5'h9;
     parameter RTYPEEX = 5'ha, RTYPEWR = 5'hb;
-    parameter BEQEX = 5'hc;
-    parameter JEX = 5'hd;
+    parameter BCONDEX = 5'hc;
+    parameter MEMADR = 5'hd;
+    parameter JALEX = 5'he, JALWR = 5'hf;
+    parameter JCONDEX = 5'h10;
     /// Stages of Execution parameters End
 
     /// Decode stage parameters Start
@@ -31,14 +32,20 @@ module controlFSM #(
     parameter ANDI = 4'h1, ORI = 4'h2, XORI = 4'h3;
     parameter MOVI = 4'hd;
     parameter LUI = 4'hf;
+    parameter LB = 4'h0;
+    parameter SB = 4'h4;
+    parameter JAL = 4'h8;
+    parameter JCOND = 4'ha;
     // I-Type Decode end
     parameter MEM_INSTRUCTION =  4'h4;
-    parameter SHIFT_INSTRUCTION = 4'h8;
-    parameter Bcond =  4'hc;
+    parameter SHIFT_INSTURCTION = 4'h8;
+    parameter BCOND =  4'hc;
     /// Decode stage parameters End
 
     /// FSM State vars 
     reg [3:0] state, nextstate;
+    reg passesCond;
+    wire [4:0] PSRvals = PSR[4:0];
 
     always @(posedge clk ) begin
         if(~reset) state <= FETCH;
@@ -60,20 +67,20 @@ module controlFSM #(
                         ADDI:   nextstate <= ITYPEEX;
                         SUBI:   nextstate <= ITYPEEX;
                         CMPI:   nextstate <= ITYPEEX;
-                        CMPI:   nextstate <= ITYPEEX;
                         ANDI:   nextstate <= ITYPEEX;
                         ORI:    nextstate <= ITYPEEX;
                         XORI:   nextstate <= ITYPEEX;
                         MOVI:   nextstate <= ITYPEEX;
 
-                        Bcond:     nextstate <= BEQEX;
+                        BCOND:     nextstate <= BCONDEX;
                         // Implemented for ADDI instruction.
                         default: nextstate <= FETCH; // should never happen
                      endcase
             MEMADR:  case(opCode2)
                         LB:      nextstate <= LBRD;
                         SB:      nextstate <= SBWR;
-                        J:
+                        JAL:  nextstate <= JALEX;
+                        JCOND: nextstate <= JCONDEX;
                         default: nextstate <= FETCH; // should never happen
                      endcase
             LBRD:    nextstate <= LBWR;
@@ -90,17 +97,20 @@ module controlFSM #(
             SHIFTEX: nextstate <= SHIFTWR;
             SHIFTWR: nextstate <= FETCH;
             
-            BEQEX:   nextstate <= FETCH;
+            BCONDEX:   nextstate <= FETCH;
             
-            JEX:     nextstate <= FETCH;
+            JALEX:     nextstate <= JWR;
+            JALWR:     nextstate <= FETCH;
             
+            JCONDEX:  nextstate <= FETCH;
+
             default: nextstate <= FETCH; // should never happen
         endcase
     end
         // This combinational block generates the outputs from each state. 
 always @(*) begin
         // set all outputs to zero, then conditionally assert just the appropriate ones
-        storeRegEn <= 0;
+        storeReg <= 0;
         zeroExtend <= 1;
         SrcB <= 1;
         JmpEN <= 0; BranchEN <= 0, JALEN <= 0, PCEN <= 0;
@@ -119,8 +129,6 @@ always @(*) begin
             FETCH: 
                 begin
                     nextInstruction <= 1;
-                    PCinstruction <= 1;
-                    PCEN <= 1;
                 end
             DECODE:
                 begin
@@ -129,6 +137,10 @@ always @(*) begin
                     end
                     SrcB <= 0;
                     immediateRegEN <= 1;
+                    if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
+                        PCinstruction <= 1;
+                        PCEN <= 1;
+                    end
                 end
             MEMADR:
                 begin
@@ -137,17 +149,18 @@ always @(*) begin
                 end
             LBRD:
                 begin
-                    iord    <= 1;
+                    updateAddress <= 0;
                 end
             LBWR:
                 begin
-                    regwrite <= 1;
-                    memtoreg <= 1;
+                    writeData <= 0;
+                    regWriteEN <= 1;
                 end
             SBWR:
                 begin
-                    memwrite <= 1;
-                    iord     <= 1;
+                    storeReg <= 1;
+                    updateAddress <= 0;
+                    wren_a <= 1;
                 end
             RTYPEEX: 
                 begin
@@ -190,17 +203,102 @@ always @(*) begin
                 begin
                     regWriteEn <= 1;
                 end
-            BEQEX:
+            BCONDEX:
                 begin
-                    alusrca     <= 1;
-                    aluop       <= 2'b01;
-                    pcwritecond <= 1;
-                    pcsource    <= 2'b01;
+                    branchEN <= passesCond;
+                    PCinstruction <= 1;
+                    SrcB <= 0;
+                    PCEN <= 1;    
                 end
-            JEX:
+            JALEX:
                 begin
-                    pcwrite  <= 1;
-                    pcsource <= 2'b10;
+                    jalEN <= 1;
+                    PCinstruction <= 1;
+                    result <= 2'b11;
+                    resultEN <= 1;
+                    PCEN <= 1;
+                end
+            JALWR:
+                begin
+                    regWrite <= 1;
+                end
+            JCONDEX:
+                begin
+                    jumpEN <= passesCond;
+                    PCinstruction <= 1;
+                    PCEN <= 1;
+                end
+        endcase
+    end
+    always @(*) begin
+        case(conditionCode)
+            4'h0:
+                begin
+                    passesCond <= PSRvals[4] == 1'b1;
+                end
+            4'h1:
+                begin
+                    passesCond <= PSRvals[4] == 1'b0;
+                end
+            4'hd:
+                begin
+                    passesCond <= PSRvals[4] == 1'b1 || PSRvals[1] == 1'b1;
+                end
+            4'h2:
+                begin
+                    passesCond <= PSRvals[3] == 1'b1;
+                end
+            4'h3:
+                begin
+                    passesCond <= PSRvals[3] == 1'b0;
+                end
+            4'h4:
+                begin
+                    passesCond <= PSRvals[0] == 1'b1;
+                end
+            4'h5:
+                begin
+                    passesCond <= PSRvals[0] == 1'b0;
+                end
+            4'ha:
+                begin
+                    passesCond <= PSRvals[4] == 1'b0 && PSRvals[0] == 1'b0;
+                end
+            4'hb:
+                begin
+                    passesCond <= PSRvals[4] == 1'b1 || PSRvals[0] == 1'b1;
+                end
+            4'h6:
+                begin
+                    passesCond <= PSRvals[1] == 1'b1;
+                end
+            4'h7:
+                begin
+                    passesCond <= PSRvals[1] == 1'b0;
+                end
+            4'h8:
+                begin
+                    passesCond <= PSRvals[2] == 1'b1;
+                end
+            4'h9:
+                begin
+                    passesCond <= PSRvals[2] == 1'b0;
+                end
+            4'hc:
+                begin
+                    passesCond <= PSRvals[1] == 1'b0 && PSRvals[4] == 1'b0;
+                end
+            4'he:
+                begin
+                    passesCond <= 1;
+                end
+            4'hf:
+                begin
+                    passesCond <= 0;
+                end
+            default:
+                begin
+                    passesCond <= 0;
                 end
         endcase
     end

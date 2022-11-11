@@ -1,4 +1,8 @@
 
+// UPDATE THIS, shift amt, up to 15 positions in a right shit, and up to 14 positions in a left shift. 
+//if shift direction is 1, then shift left, else shift right
+// if shiftType is 1, then logical shift, else arithmetic shift.'
+// Have shifter ready for all shift instructions.
 /*
 *   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
 This module does arithmetic shifting (extends the sign value) and logical shifting (Leftshifting and rightshifting) by one bit
@@ -11,7 +15,8 @@ module shifter #(
     parameter WIDTH = 16
 ) (
     input signed [WIDTH-1:0] src,
-    input [WIDTH-1:0] shiftDirection,
+    input shiftDirection,
+    input [3:0] shiftAmt,
     input shiftType,
     output reg signed [WIDTH-1:0] shiftOut
 );

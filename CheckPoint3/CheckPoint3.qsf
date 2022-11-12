@@ -55,6 +55,8 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST ON -section_id eda_s
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name VERILOG_FILE EXRAM_bb.v
+set_global_assignment -name VERILOG_FILE EXRAM.v
 set_global_assignment -name VERILOG_FILE tb_mem_cpu.v
 set_global_assignment -name VERILOG_FILE mem_cpu.v
 set_global_assignment -name VERILOG_FILE arrozYlecheCPU.v
@@ -69,10 +71,6 @@ set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux2.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/fpALU.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopr.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/ALU.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint2/EXRAM_bb.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint2/EXRAM.v
-set_global_assignment -name QIP_FILE ../CheckPoint2/EXRAM.qip
 set_global_assignment -name VERILOG_FILE ../CheckPoint2/datapathDraft.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint2/Datapath_Memory.v
-set_global_assignment -name HEX_FILE ../CheckPoint2/RAM02.hex
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

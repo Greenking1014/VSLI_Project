@@ -26,7 +26,8 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	input [1:0]			 chooseResult,
 	output [WIDTH-1:0]   memOut,
 	output [WIDTH-1:0]   address,
-	output [7:0] PSROut
+	output [7:0] PSROut,
+	output [15:0] instrOut
 );	
     wire [WIDTH-1:0] regData1, regData2;
 	wire [REGBITS -1:0] regAddress1, regAddress2;
@@ -55,7 +56,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	// set Reg Addresses for src1 and src2
 	assign regAddress1 = instr[11:8];
 	assign regAddress2 = instr[3:0];
-	 
+	assign instrOut = instr;
 	// Choose between load from memory or store result
 	mux2 #(WIDTH) updateReg(memdata, result, WriteData, regDataWB);
 	 
@@ -64,7 +65,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	 
 	// set src1 and src2
     mux2 #(WIDTH) src1Mux(regData1, pc, PCinstruction, src1);
-    mux2 #(WIDTH) src2mux(immediateReg, regData2, SrcB, src2);
+    mux2 #(WIDTH) src2mux(immediateRegVal, regData2, SrcB, src2);
     
 	 // output from shifter and AlU unit
     mux4 #(WIDTH) outputMUX(shiftOut, aluResult1, aluResult2, Rlink, chooseResult, newResult);

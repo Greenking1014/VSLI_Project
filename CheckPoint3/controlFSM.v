@@ -1,6 +1,4 @@
-module controlFSM #(
-    parameter WIDTH = 16, REGBITS = 4
-) (
+module controlFSM  (
     input clk, reset,
     input [3:0] opCode1, opCode2, conditionCode, shiftAmtIn,
     input [7:0] PSR,

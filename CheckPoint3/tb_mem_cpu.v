@@ -31,9 +31,10 @@ localparam CLK_PERIOD = 10;
 	 end
 
     initial begin
-	 reset <= 1;
+	 reset <= 0;
      #CLK_PERIOD;
-     reset <= 0;
+	 #5;
+     reset <= 1;
 	 end
 
 endmodule

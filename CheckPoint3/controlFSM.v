@@ -13,7 +13,7 @@ module controlFSM  (
     localparam FETCH = 5'h0, DECODE = 5'h1,FETCH2 = 5'h11;
     localparam ITYPEEX = 5'h3, ITYPEWR = 5'h4;
     localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6;
-    localparam LBRD = 5'h7, LBWR = 5'h8; 
+    localparam LBRD = 5'h7, LBWR = 5'h8, LBWR2 = 5'h12;
     localparam SBWR = 5'h9;
     localparam RTYPEEX = 5'ha, RTYPEWR = 5'hb;
     localparam BCONDEX = 5'hc;
@@ -83,8 +83,9 @@ module controlFSM  (
                         default: nextstate <= FETCH; // should never happen
                      endcase
             LBRD:    nextstate <= LBWR;
-            LBWR:    nextstate <= FETCH;
-
+            LBWR:    nextstate <= LBWR2;
+				LBWR2:   nextstate <= FETCH;
+				
             SBWR:    nextstate <= FETCH;
             
             RTYPEEX: nextstate <= RTYPEWR;
@@ -154,8 +155,14 @@ always @(*) begin
             LBRD:
                 begin
                     updateAddress <= 0;
+						  //writeData <= 0;
                 end
             LBWR:
+                begin
+                    writeData <= 0;
+                    regWriteEN <= 1;
+                end
+				LBWR2:
                 begin
                     writeData <= 0;
                     regWriteEN <= 1;

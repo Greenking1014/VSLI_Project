@@ -72,6 +72,7 @@ set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux2.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/fpALU.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopr.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint1/ALU.v
+set_global_assignment -name MIF_FILE RAM.mif
 set_global_assignment -name VERILOG_FILE ../CheckPoint2/datapathDraft.v
 set_global_assignment -name VERILOG_FILE ../CheckPoint2/Datapath_Memory.v
 set_global_assignment -name SOURCE_FILE InitReg.dat

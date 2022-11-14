@@ -10,7 +10,7 @@ module controlFSM  (
     output reg [1:0] result
 );
     /// Stages of Execution parameters Start
-    localparam FETCH = 5'h0, DECODE = 5'h1;
+    localparam FETCH = 5'h0, DECODE = 5'h1,FETCH2 = 5'h11;
     localparam ITYPEEX = 5'h3, ITYPEWR = 5'h4;
     localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6;
     localparam LBRD = 5'h7, LBWR = 5'h8; 
@@ -53,7 +53,8 @@ module controlFSM  (
     // Next State Logic (Combinational)
     always @(*) begin
         case(state)
-            FETCH:  nextstate <= DECODE;
+            FETCH:  nextstate <= FETCH2;
+            FETCH2: nextstate <= DECODE;
             DECODE:  case(opCode1)
                         MEM_INSTRUCTION:    nextstate <= MEMADR;
 
@@ -131,7 +132,10 @@ always @(*) begin
             FETCH: 
                 begin
                     nextInstruction <= 1;
+                    PCinstruction <= 1;
+                    PCEN <= 1;
                 end
+            FETCH2:  nextInstruction <= 1;
             DECODE:
                 begin
                     if(opCode2 & 4'h8) begin
@@ -140,8 +144,8 @@ always @(*) begin
                     SrcB <= 0;
                     immediateRegEN <= 1;
                     if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
-                        PCinstruction <= 1;
-                        PCEN <= 1;
+                        // PCinstruction <= 1;
+                        // PCEN <= 1;
                     end
                 end
             MEMADR:

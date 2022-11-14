@@ -28,12 +28,13 @@ controlFSM ctrlFSM (
     result
 );
 
+wire not_reset = ~reset;
 assign memwrite_a = wren_a;
 assign memwrite_b = wren_b;
 
 
 datapathDraft #(WIDTH, REGBITS) datapath (
-    clk, reset,
+    clk, not_reset,
     memdata,
     PCEN,
     PSREN,

@@ -33,7 +33,7 @@ module controlFSM  (
     localparam LB = 4'h0;
     localparam SB = 4'h4;
     localparam JAL = 4'h8;
-    localparam JCOND = 4'ha;
+    localparam JCOND = 4'hc;
     // I-Type Decode end
     localparam MEM_INSTRUCTION =  4'h4;
     localparam SHIFT_INSTRUCTION = 4'h8;
@@ -136,6 +136,7 @@ always @(*) begin
                     PCEN <= 1;
                 end
             FETCH2:  nextInstruction <= 1;
+                        
             DECODE:
                 begin
                     if(opCode2 & 4'h8) begin
@@ -143,10 +144,10 @@ always @(*) begin
                     end
                     SrcB <= 0;
                     immediateRegEN <= 1;
-                    /*if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
-                        // PCinstruction <= 1;
-                        // PCEN <= 1;
-                    end*/
+                    // if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
+                    //     // PCinstruction <= 1;
+                    //     // PCEN <= 1;
+                    // end
                 end
             MEMADR:
                 begin

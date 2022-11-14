@@ -143,10 +143,10 @@ always @(*) begin
                     end
                     SrcB <= 0;
                     immediateRegEN <= 1;
-                    if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
+                    /*if(opCode1 != BCOND && (opCode1 != MEM_INSTRUCTION || (opCode2 != JAL  || opCode2 != JCOND))) begin // Kinda sus
                         // PCinstruction <= 1;
                         // PCEN <= 1;
-                    end
+                    end*/
                 end
             MEMADR:
                 begin
@@ -174,7 +174,7 @@ always @(*) begin
                 end
             RTYPEWR:
                 begin
-                    if(opCode1 != CMPI) begin
+                    if(opCode2 != 4'hb) begin
                         regWriteEN <= 1;
                     end
                 end

@@ -31,7 +31,7 @@ module mem_cpu(
 		q_b
 	);
 
-	arrozYlecheCPU cpu 
+	arrozYlecheCPU #(16, 4, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) cpu 
 	(
 		clk,                  // 50MHz clock
 		reset,                // active-low reset

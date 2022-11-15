@@ -2,7 +2,7 @@
 *   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero//
 */
 
-module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
+module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0000, INTERRUPT_CONTROL = 16'h5FFF, DATA_STACK = 16'h6FFE, IO_MEM = 16'hCFFD)(
     input                clk, reset,
 	input [WIDTH-1:0]    memdata,
 	input                PCEN,
@@ -46,11 +46,11 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 
 	
     // registers for results
-    flopenr #(WIDTH) pcregUnit(clk,reset,PCEN,aluResult2,pc); //enable based
+    flopenr #(WIDTH, INSTRUCTION_MEM) pcregUnit(clk,reset,PCEN,aluResult2,pc); //enable based
     flopenr #(8) PSRreg(clk,reset,PSREN,PSRresult,PSROut);	// out to the control unit
-    flopenr #(WIDTH) instrReg(clk,reset,nextInstruction,memdata,instr);
-	flopenr #(WIDTH) resultReg(clk,reset,resultEn,newResult,result);
-	flopenr #(WIDTH) immediateReg(clk, reset, immediateRegEN, immediate, immediateRegVal);
+    flopenr #(WIDTH, 16'h0000) instrReg(clk,reset,nextInstruction,memdata,instr);
+	flopenr #(WIDTH, 16'h0000) resultReg(clk,reset,resultEn,newResult,result);
+	flopenr #(WIDTH, 16'h0000) immediateReg(clk, reset, immediateRegEN, immediate, immediateRegVal);
 
     
 	// set Reg Addresses for src1 and src2
@@ -70,17 +70,17 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4)(
 	 // output from shifter and AlU unit
     mux4 #(WIDTH) outputMUX(shiftOut, aluResult1, aluResult2, Rlink, chooseResult, newResult);
 	 
-	 // Next Address to pass to memeory
-	 mux2 #(WIDTH) memAddress(regData2, pc, updateAddress, address);
-	 
-	 // Data to write to memory
-	 mux2 #(WIDTH) dataToStore(result, regData1, StoreReg, memOut);
+	// Next Address to pass to memeory
+	mux2 #(WIDTH) memAddress(regData2, pc, updateAddress, address);
+	
+	// Data to write to memory
+	mux2 #(WIDTH) dataToStore(result, regData1, StoreReg, memOut);
 	 
     // pc counter doesnt care about PSR for now
     pcALU #(WIDTH) pc_ALU(src1,src2,jumpEN,jalEN,BranchEN,Rlink,aluResult2);
     
 	 // Operational units
     shifter #(WIDTH) shifterUnit(src1, src2, shiftAmt, shifterControl, shiftOut);
-    RegisterFile #(WIDTH, REGBITS) regFile(clk, regWrite, regAddress1, regAddress2, regDataWB, regData1, regData2);
+    RegisterFile #(WIDTH, REGBITS, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) regFile(clk, regWrite, regAddress1, regAddress2, regDataWB, regData1, regData2);
     ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);	
 endmodule 

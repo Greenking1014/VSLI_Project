@@ -1,4 +1,4 @@
-module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4)
+module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0000, INTERRUPT_CONTROL = 16'h5FFF, DATA_STACK = 16'h6FFE, IO_MEM = 16'hCFFD)
    (input clk,                  // 50MHz clock
     input reset,                // active-low reset
     input [15:0] memdata,        // data that is read from memory
@@ -34,7 +34,7 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4)
     assign memwrite_a = wren_a;
     assign memwrite_b = wren_b;
 
-    datapathDraft #(WIDTH, REGBITS) datapath (
+    datapathDraft #(WIDTH, REGBITS, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) datapath (
         clk, not_reset,
         memdata,
         PCEN,

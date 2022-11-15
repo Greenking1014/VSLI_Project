@@ -30,7 +30,6 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'
     );
 
     wire not_reset = ~reset;
-    register
     assign memwrite_a = wren_a;
     assign memwrite_b = wren_b;
 

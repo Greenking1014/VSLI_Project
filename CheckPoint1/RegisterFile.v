@@ -10,15 +10,17 @@
 // Quartus, so it can be initialized with a $readmemb function.
 // In this case, all the values in the ram.dat file are 0
 // to clear the registers to 0 on initialization
-module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
-                (input                clk, 
-                 input                regwrite, 
-                 input  [REGBITS-1:0] ra1, ra2, 
-                 input  [WIDTH-1:0]   wd, 
-                 output [WIDTH-1:0]   rd1, rd2);
+module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0000, INTERRUPT_CONTROL = 16'h5FFF, DATA_STACK = 16'h6FFE, IO_MEM = 16'hCFFD)
+                (
+                  input                clk,
+                  input                reset,
+                  input                regwrite, 
+                  input  [REGBITS-1:0] ra1, ra2, 
+                  input  [WIDTH-1:0]   wd, 
+                  output [WIDTH-1:0]   rd1, rd2);
 	
     reg  [WIDTH-1:0] RAM [(1<<REGBITS)-1:0]; // (1<<REGBITS)-1:0 this means, that there are registers numbered from 0 to 15
-
+   localparam SP = 4'he, RA = 4'hf, ZR = 4'h0;
 	//need to update this TODO
 	initial begin //this is only done once at the begining of the program and initializes all the registers from 0 to 15 to the value zero.
 	$display("Loading register file");
@@ -33,9 +35,13 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4)
    // dual-ported register file
    //   read two ports combinationally
    //   write third port on rising edge of clock
-   always @(posedge clk)
-      if (regwrite) RAM[ra1] <= wd;
-	
+   always @(posedge clk) begin
+      if(regwrite) RAM[ra1] <= wd;
+//      if(~reset) begin
+//         RAM[SP] <= DATA_STACK;
+//         RAM[ZR] <= 16'h0000;
+//      end
+   end
    // register 0 is hardwired to 0 //TODO, WHAT SHOULD WE DO ABOUT THIS?(keeps it as is?) (QUESTIONS: what should we do with register 0?)
    assign rd1 = ra1 ? RAM[ra1] : 0;
    assign rd2 = ra2 ? RAM[ra2] : 0;

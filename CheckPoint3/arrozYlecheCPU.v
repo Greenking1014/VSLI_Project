@@ -1,4 +1,4 @@
-module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4)
+module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0000, INTERRUPT_CONTROL = 16'h5FFF, DATA_STACK = 16'h6FFE, IO_MEM = 16'hCFFD)
    (input clk,                  // 50MHz clock
     input reset,                // active-low reset
     input [15:0] memdata,        // data that is read from memory
@@ -16,49 +16,48 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4)
     wire [3:0] shifterControl, ALUcontrol,shiftAmtOut;
     wire [1:0] result;
     wire [15:0]instr;
-controlFSM ctrlFSM (
-    clk, reset,
-    instr[15:12], instr[7:4], instr[11:8], instr[3:0],
-    PSR,
-    storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN,
-    updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
-    regWriteEN, PCinstruction,
-    shifterControl, ALUcontrol,
-    shiftAmtOut,
-    result
-);
 
-wire not_reset = ~reset;
-assign memwrite_a = wren_a;
-assign memwrite_b = wren_b;
+    controlFSM ctrlFSM (
+        clk, reset,
+        instr[15:12], instr[7:4], instr[11:8], instr[3:0],
+        PSR,
+        storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN,
+        updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
+        regWriteEN, PCinstruction,
+        shifterControl, ALUcontrol,
+        shiftAmtOut,
+        result
+    );
 
+    wire not_reset = ~reset;
+    assign memwrite_a = wren_a;
+    assign memwrite_b = wren_b;
 
-datapathDraft #(WIDTH, REGBITS) datapath (
-    clk, not_reset,
-    memdata,
-    PCEN,
-    PSREN,
-    nextInstruction,
-    updateAddress,
-    storeReg,
-    writeData,
-    regWriteEN,
-    zeroExtend,
-    PCinstruction,
-    SrcB,
-    resultEN,
-    immediateRegEN,
-    shiftAmtOut,
-    shifterControl,
-    ALUcontrol,
-    JmpEN,
-    BranchEN,
-    JALEN,
-	result,
-	memOut,
-	adr,
-	PSR,
-    instr
-);	
-
+    datapathDraft #(WIDTH, REGBITS, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) datapath (
+        clk, not_reset,
+        memdata,
+        PCEN,
+        PSREN,
+        nextInstruction,
+        updateAddress,
+        storeReg,
+        writeData,
+        regWriteEN,
+        zeroExtend,
+        PCinstruction,
+        SrcB,
+        resultEN,
+        immediateRegEN,
+        shiftAmtOut,
+        shifterControl,
+        ALUcontrol,
+        JmpEN,
+        BranchEN,
+        JALEN,
+        result,
+        memOut,
+        adr,
+        PSR,
+        instr
+    );
 endmodule

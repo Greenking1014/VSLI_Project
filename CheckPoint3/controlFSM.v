@@ -4,7 +4,7 @@ module controlFSM  (
     input [7:0] PSR,
     output reg storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN,
     output reg updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
-    output reg regWriteEN, PCinstruction,
+    output reg regWriteEN, PCinstruction, regDest,
     output reg [3:0] shifterControl, ALUcontrol,
     output [3:0] shiftAmtOut,
     output reg [1:0] result
@@ -129,7 +129,8 @@ always @(*) begin
         shifterControl <= 4'h0;
 		ALUcontrol <= 4'h5;
         result <= 2'h1;
-        
+		regDest <= 1'b1;
+		  
         case(state)
             FETCH: 
                 begin
@@ -238,6 +239,7 @@ always @(*) begin
             JALWR:
                 begin
                     regWriteEN <= 1;
+						  regDest <= 0;
                 end
             JCONDEX:
                 begin

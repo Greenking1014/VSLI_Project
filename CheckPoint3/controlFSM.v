@@ -127,11 +127,13 @@ always @(*) begin
         regWriteEN <= 0;
         PCinstruction <= 0;
         shifterControl <= 4'h0;
-		  ALUcontrol <= 4'h5;
+		ALUcontrol <= 4'h5;
         result <= 2'h1;
+        
         case(state)
             FETCH: 
                 begin
+
                     nextInstruction <= 1;
                     PCinstruction <= 1;
                     PCEN <= 1;
@@ -184,7 +186,7 @@ always @(*) begin
                 end
             RTYPEWR:
                 begin
-                    if(opCode2 != 4'hb && conditionCode != 4'b1110 && conditionCode != 4'b1111) begin //added second condition to not allow user to write in reg14 and reg 15
+                    if(opCode2 != 4'hb && opCode2 != 4'b0 && conditionCode != 4'b1110 && conditionCode != 4'b1111) begin //added second condition to not allow user to write in reg14 and reg 15
                         regWriteEN <= 1;
                     end
                 end

@@ -184,7 +184,7 @@ always @(*) begin
                 end
             RTYPEWR:
                 begin
-                    if(opCode2 != 4'hb & opCode2 != 4'b0) begin
+                    if(opCode2 != 4'hb && opCode2 != 4'b0 && conditionCode != 4'b1110 && conditionCode != 4'b1111) begin //added second condition to not allow user to write in reg14 and reg 15
                         regWriteEN <= 1;
                     end
                 end
@@ -197,7 +197,7 @@ always @(*) begin
                 end
             ITYPEWR:
                 begin
-                    if(opCode1 != CMPI) begin
+                    if(opCode1 != CMPI && conditionCode != 4'b1110 && conditionCode != 4'b1111) begin //added second condition to not allow user to write in reg14 and reg 15
                         regWriteEN <= 1;
                     end
                 end

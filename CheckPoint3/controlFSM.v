@@ -177,8 +177,10 @@ always @(*) begin
             RTYPEEX: 
                 begin
                     ALUcontrol <= opCode2;
-                    PSREN <= 1;
-                    resultEN <= 1;
+						  if(opCode2 != 4'h0) begin
+							PSREN <= 1;
+							resultEN <= 1;
+						  end
                 end
             RTYPEWR:
                 begin
@@ -220,6 +222,7 @@ always @(*) begin
                     BranchEN <= passesCond;
                     PCinstruction <= 1;
                     SrcB <= 0;
+						  zeroExtend <= 0;
                     PCEN <= 1;    
                 end
             JALEX:

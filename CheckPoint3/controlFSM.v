@@ -127,9 +127,9 @@ always @(*) begin
         regWriteEN <= 0;
         PCinstruction <= 0;
         shifterControl <= 4'h0;
-		ALUcontrol <= 4'h5;
+		  ALUcontrol <= 4'h5;
         result <= 2'h1;
-		regDest <= 1'b1;
+		  regDest <= 1'b1;
 		  
         case(state)
             FETCH: 

@@ -10,7 +10,7 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'
 
     wire [3:0] opCode1, opCode2, conditionCode;
     wire [7:0] PSR;
-    wire storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN;
+    wire storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN,regDst;
     wire PCEN, resultEN, immediateRegEN,updateAddress, wren_a, wren_b, nextInstruction;
     wire writeData, PSREN,regWriteEN, PCinstruction;
     wire [3:0] shifterControl, ALUcontrol,shiftAmtOut;
@@ -23,7 +23,7 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'
         PSR,
         storeReg, zeroExtend, SrcB, JmpEN, BranchEN, JALEN, PCEN, resultEN, immediateRegEN,
         updateAddress, wren_a, wren_b, nextInstruction, writeData, PSREN,
-        regWriteEN, PCinstruction,
+        regWriteEN, PCinstruction, regDst,
         shifterControl, ALUcontrol,
         shiftAmtOut,
         result
@@ -43,9 +43,10 @@ module arrozYlecheCPU #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'
         storeReg,
         writeData,
         regWriteEN,
-        zeroExtend,
-        PCinstruction,
-        SrcB,
+        zeroExtend,        
+		  PCinstruction,
+		  SrcB,
+        regDst,
         resultEN,
         immediateRegEN,
         shiftAmtOut,

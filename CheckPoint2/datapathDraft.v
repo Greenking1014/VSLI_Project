@@ -14,6 +14,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h
 	input					 regWrite,
 	input 					 ZeroExtend,
 	input					 PCinstruction,
+	input					 SrcB,
 	input					 regDest,
 	input					resultEn,
 	input					immediateRegEN,
@@ -84,7 +85,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h
 
 	// Operational units
 	shifter #(WIDTH) shifterUnit(src1, src2, shiftAmt, shifterControl, shiftOut);
-	RegisterFile #(WIDTH, REGBITS, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) regFile(clk, regWrite, regDestination, regAddress2, regDataWB, regData1, regData2);
+	RegisterFile #(WIDTH, REGBITS, INSTRUCTION_MEM, INTERRUPT_CONTROL, DATA_STACK, IO_MEM) regFile(clk, reset, regWrite, regDestination, regAddress2, regDataWB, regData1, regData2);
 	ALU #(WIDTH) alu_unit(src1, src2, ALUcond,aluResult1, PSRresult);	
 
 endmodule 

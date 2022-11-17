@@ -26,8 +26,8 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0
 	$display("Loading register file");
 	// you'll need to change the path to this file! //TODO: change the filepath? to a relative path
 	//$readmemh("C:\\Users\\18019\\Documents\\UofU\\FALL2022\\CS3710\\16bitCPU\\sixteenBitComputer\\CheckPoint1\\initReg.dat",RAM); 
-	$readmemh("C:\\Users\\brifu\\OneDrive\\Documents\\Fall 2022\\ECE 3710\\final project\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
-	//$readmemh("C:/Users/misae/OneDrive/Documents/GitHub/3710ProjectClone/CheckPoint3/InitReg.dat",RAM); 
+	//$readmemh("C:\\Users\\brifu\\OneDrive\\Documents\\Fall 2022\\ECE 3710\\final project\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
+	$readmemh("C:\\Users\\misae\\OneDrive\\Documents\\GitHub\\3710ProjectClone\\CheckPoint3\\InitReg.dat",RAM); 
 	$display("done with RF load"); 
 	end 
 

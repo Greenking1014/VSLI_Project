@@ -129,7 +129,7 @@ always @(*) begin
         shifterControl <= 4'h0;
 		  ALUcontrol <= 4'h5;
         result <= 2'h1;
-		  regDest <= 1'b1;
+		  regDest <= 1'b0;
 		  
         case(state)
             FETCH: 
@@ -239,7 +239,7 @@ always @(*) begin
             JALWR:
                 begin
                     regWriteEN <= 1;
-						  regDest <= 0;
+						  regDest <= 1;
                 end
             JCONDEX:
                 begin

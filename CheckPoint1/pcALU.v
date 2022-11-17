@@ -32,7 +32,7 @@ always@(*) begin
 	RlinkBack <= 16'h0000;
 	if(jalEN) begin
 		newPC <= src2;
-		RlinkBack <= pc + 1;
+		RlinkBack <= pc;
 	end
 	else if(jumpEN) newPC <= src2 -1;        // Here src2 is Rtarget / Address
 	else if(branchEN) newPC <= pc + $signed(src2) - 2; // Here src2 is the immediate 

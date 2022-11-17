@@ -134,6 +134,7 @@ always @(*) begin
         case(state)
             FETCH: 
                 begin
+
                     nextInstruction <= 1;
                     PCinstruction <= 1;
                     PCEN <= 1;
@@ -179,12 +180,14 @@ always @(*) begin
             RTYPEEX: 
                 begin
                     ALUcontrol <= opCode2;
-                    PSREN <= 1;
-                    resultEN <= 1;
+						  if(opCode2 != 4'h0) begin
+							PSREN <= 1;
+							resultEN <= 1;
+						  end
                 end
             RTYPEWR:
                 begin
-                    if(opCode2 != 4'hb) begin
+                    if(opCode2 != 4'hb && opCode2 != 4'b0) begin
                         regWriteEN <= 1;
                     end
                 end
@@ -222,6 +225,7 @@ always @(*) begin
                     BranchEN <= passesCond;
                     PCinstruction <= 1;
                     SrcB <= 0;
+						  zeroExtend <= 0;
                     PCEN <= 1;    
                 end
             JALEX:

@@ -14,6 +14,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h
 	input					 regWrite,
 	input 					 ZeroExtend,
 	input					 PCinstruction,
+	input					 SrcB,
 	input					 regDest,
 	input					 SrcB,
 	input					resultEn,

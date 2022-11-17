@@ -25,7 +25,7 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0
 	initial begin //this is only done once at the begining of the program and initializes all the registers from 0 to 15 to the value zero.
 	$display("Loading register file");
 	// you'll need to change the path to this file! //TODO: change the filepath? to a relative path
-	$readmemh("C:\\Users\\misae\\OneDrive\\Documents\\GitHub\\3710ProjectClone\\CheckPoint1\\initReg.dat",RAM); 
+	$readmemh("D:\\Project_repos\\repos\\sixteenBitComputer\\CheckPoint1\\initReg.dat",RAM); 
 	// $readmemh("C:\\Users\\brifu\\OneDrive\\Documents\\Fall 2022\\ECE 3710\\final project\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
 	$display("done with RF load"); 
 	end 

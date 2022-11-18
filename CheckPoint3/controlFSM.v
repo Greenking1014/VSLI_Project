@@ -12,14 +12,14 @@ module controlFSM  (
     /// Stages of Execution parameters Start
     localparam FETCH = 5'h0, DECODE = 5'h1,FETCH2 = 5'h11;
     localparam ITYPEEX = 5'h3, ITYPEWR = 5'h4;
-    localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6;
+    localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6 , SBWR2 = 5'h14;
     localparam LBRD = 5'h7, LBWR = 5'h8, LBWR2 = 5'h12;
     localparam SBWR = 5'h9;
     localparam RTYPEEX = 5'ha, RTYPEWR = 5'hb;
-    localparam BCONDEX = 5'hc;
+    localparam BCONDEX = 5'hc, BCONDEX2 = 5'h15;
     localparam MEMADR = 5'hd;
     localparam JALEX = 5'he, JALWR = 5'hf;
-    localparam JCONDEX = 5'h10;
+    localparam JCONDEX = 5'h10, JCONDEX2 = 5'h13; 
     /// Stages of Execution parameters End
 
     /// Decode stage parameters Start
@@ -86,7 +86,8 @@ module controlFSM  (
             LBWR:    nextstate <= LBWR2;
 				LBWR2:   nextstate <= FETCH;
 				
-            SBWR:    nextstate <= FETCH;
+            SBWR:    nextstate <= SBWR2;
+				SBWR2:    nextstate <= FETCH;
             
             RTYPEEX: nextstate <= RTYPEWR;
             RTYPEWR: nextstate <= FETCH;
@@ -97,12 +98,14 @@ module controlFSM  (
             SHIFTEX: nextstate <= SHIFTWR;
             SHIFTWR: nextstate <= FETCH;
             
-            BCONDEX:   nextstate <= FETCH;
+            BCONDEX:   nextstate <= BCONDEX2;
+				BCONDEX2:   nextstate <= FETCH;
             
             JALEX:     nextstate <= JALWR;
             JALWR:     nextstate <= FETCH;
             
-            JCONDEX:  nextstate <= FETCH;
+            JCONDEX:  nextstate <= JCONDEX2;
+				JCONDEX2:  nextstate <= FETCH;
 
             default: nextstate <= FETCH; // should never happen
         endcase
@@ -177,6 +180,9 @@ always @(*) begin
                     updateAddress <= 0;
                     wren_a <= 1;
                 end
+				SBWR2:
+					begin
+					end
             RTYPEEX: 
                 begin
                     ALUcontrol <= opCode2;
@@ -226,8 +232,11 @@ always @(*) begin
                     PCinstruction <= 1;
                     SrcB <= 0;
 						  zeroExtend <= 0;
-                    PCEN <= 1;    
+                    if(passesCond)PCEN <= 1;    
                 end
+				BCONDEX2: 
+					begin
+					end
             JALEX:
                 begin
                     JALEN <= 1;
@@ -247,6 +256,9 @@ always @(*) begin
                     PCinstruction <= 1;
                     PCEN <= 1;
                 end
+				JCONDEX2:
+					 begin
+					 end
         endcase
     end
     always @(*) begin

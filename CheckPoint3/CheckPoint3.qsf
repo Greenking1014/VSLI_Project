@@ -61,6 +61,45 @@ set_global_assignment -name EDA_TEST_BENCH_NAME tb_mem_cpu -section_id eda_simul
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_mem_cpu
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_mem_cpu -section_id tb_mem_cpu
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_mem_cpu.v -section_id tb_mem_cpu
+set_location_assignment PIN_AB12 -to switches[0]
+set_location_assignment PIN_AC12 -to switches[1]
+set_location_assignment PIN_AF9 -to switches[2]
+set_location_assignment PIN_AF10 -to switches[3]
+set_location_assignment PIN_AD11 -to switches[4]
+set_location_assignment PIN_AD12 -to switches[5]
+set_location_assignment PIN_A11 -to switches[6]
+set_location_assignment PIN_AC9 -to switches[7]
+set_location_assignment PIN_AA14 -to reset
+set_location_assignment PIN_AE26 -to seg0[0]
+set_location_assignment PIN_AE27 -to seg0[1]
+set_location_assignment PIN_AE28 -to seg0[2]
+set_location_assignment PIN_AG27 -to seg0[3]
+set_location_assignment PIN_AF28 -to seg0[4]
+set_location_assignment PIN_AG28 -to seg0[5]
+set_location_assignment PIN_AH28 -to seg0[6]
+set_location_assignment PIN_AJ29 -to seg1[0]
+set_location_assignment PIN_AH29 -to seg1[1]
+set_location_assignment PIN_AH30 -to seg1[2]
+set_location_assignment PIN_AG30 -to seg1[3]
+set_location_assignment PIN_AF29 -to seg1[4]
+set_location_assignment PIN_AF30 -to seg1[5]
+set_location_assignment PIN_AD27 -to seg1[6]
+set_location_assignment PIN_AB23 -to seg2[0]
+set_location_assignment PIN_AE29 -to seg2[1]
+set_location_assignment PIN_AD29 -to seg2[2]
+set_location_assignment PIN_AC28 -to seg2[3]
+set_location_assignment PIN_AD30 -to seg2[4]
+set_location_assignment PIN_AC29 -to seg2[5]
+set_location_assignment PIN_AC30 -to seg2[6]
+set_location_assignment PIN_AD26 -to seg3[0]
+set_location_assignment PIN_AC27 -to seg3[1]
+set_location_assignment PIN_AD25 -to seg3[2]
+set_location_assignment PIN_AC25 -to seg3[3]
+set_location_assignment PIN_AB28 -to seg3[4]
+set_location_assignment PIN_AB25 -to seg3[5]
+set_location_assignment PIN_AB22 -to seg3[6]
+set_location_assignment PIN_AF14 -to clk
+set_global_assignment -name SDC_FILE clock.sdc
 set_global_assignment -name VERILOG_FILE hexTo7Seg_3710.v
 set_global_assignment -name VERILOG_FILE EXRAM_bb.v
 set_global_assignment -name VERILOG_FILE EXRAM.v

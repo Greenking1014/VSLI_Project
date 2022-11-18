@@ -6,12 +6,14 @@ module mem_cpu(
 	output [15:0] address_a, address_b, data_a, q_a, q_b,
 	output [6:0] seg0, seg1, seg2, seg3 
 );	
-	wire address_in_IO_A;
+	wire address_in_IO_A;//, wren_a, wren_b;
 	wire address_in_IO_B; 
+	//wire [15:0] address_a, address_b, data_a, q_a, q_b;
 
 	reg writeEN_A, writeEN_B;
 	reg [15:0] memOut_A, memOut_B;
 	reg [15:0] segValue;
+	//reg [15:0] data_b = 16'b0;
 
 	reg [3:0] segCode0, segCode1, segCode2, segCode3;
 // instantiate devices to be tested 
@@ -66,55 +68,55 @@ module mem_cpu(
 	always @(*) begin
 	
 		segValue <= {segCode3, segCode2, segCode1, segCode0};
-		if(address_in_IO_A) begin
-			case(address_a)
-				SWITCHES_LOC:
-					begin
-						writeEN_A <= 0;
-						memOut_A <= {{8{1'b0}},switches};
-					end
-				LEDS_LOC:
-					begin
-						writeEN_A <= 0;
-						memOut_A <= {segCode3, segCode2, segCode1, segCode0};
-						segValue <= data_a;
-					end
-				default:
-					begin
-						writeEN_A <= wren_a;
-						memOut_A <= q_a;
-					end
-			endcase
-		end
-		else begin
-			writeEN_A <= wren_a;
-			memOut_A <= q_a;
-		end
+        if(address_in_IO_A) begin
+            case(address_a)
+                SWITCHES_LOC:
+                    begin
+                        writeEN_A <= 0;
+                        memOut_A <= {{8{1'b0}},switches};
+                    end
+                LEDS_LOC:
+                    begin
+                        writeEN_A <= 0;
+                        memOut_A <= {segCode3, segCode2, segCode1, segCode0};
+                        segValue <= data_a;
+                    end
+                default:
+                    begin
+                        writeEN_A <= wren_a;
+                        memOut_A <= q_a;
+                    end
+            endcase
+        end
+        else begin
+            writeEN_A <= wren_a;
+            memOut_A <= q_a;
+        end
 
-		if(address_in_IO_B) begin
-			case(address_b)
-				SWITCHES_LOC:
-					begin
-						writeEN_B <= 0;
-						memOut_B <= {{8{1'b0}},switches};
-					end
-				LEDS_LOC:
-					begin
-						writeEN_B <= 0;
-						memOut_B <= {segCode3, segCode2, segCode1, segCode0};
-						segValue <= data_b;
-					end
-				default:
-					begin
-						writeEN_B <= wren_b;
-						memOut_B <= q_b;
-					end
-			endcase
-		end
-		else begin
-			writeEN_B <= wren_b;
-			memOut_B <= q_b;			
-		end
+        if(address_in_IO_B) begin
+            case(address_b)
+                SWITCHES_LOC:
+                    begin
+                        writeEN_B <= 0;
+                        memOut_B <= {{8{1'b0}},switches};
+                    end
+                LEDS_LOC:
+                    begin
+                        writeEN_B <= 0;
+                        memOut_B <= {segCode3, segCode2, segCode1, segCode0};
+                        segValue <= data_b;
+                    end
+                default:
+                    begin
+                        writeEN_B <= wren_b;
+                        memOut_B <= q_b;
+                    end
+            endcase
+        end
+        else begin
+            writeEN_B <= wren_b;
+            memOut_B <= q_b;
+        end
 	end
 	always @(posedge clk) begin
 		if((wren_a && ~writeEN_A) || (wren_b && ~writeEN_B)) begin

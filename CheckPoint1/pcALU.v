@@ -4,10 +4,11 @@
 
 module pcALU #(parameter WIDTH = 16)(
 	input [WIDTH-1: 0]  pc,
-	input [WIDTH-1: 0]  immediate,     //Sign extend here or before passing to alu?
+	input [WIDTH-1: 0]  src2,
 	input					  jumpEN,
-	input [WIDTH-1: 0]  RTarget,
+	//input [WIDTH-1: 0]  RTarget,
 	input               jalEN,
+	input					  branchEN,
 	output [WIDTH-1: 0] Rlink,
 	output [WIDTH-1: 0] pcOut
 );
@@ -30,10 +31,11 @@ reg [WIDTH-1:0] newPC;
 always@(*) begin
 	RlinkBack <= 16'h0000;
 	if(jalEN) begin
-		newPC <= RTarget;
-		RlinkBack <= pc + 1;
+		newPC <= src2;
+		RlinkBack <= pc;
 	end
-	else if(jumpEN) newPC <= pc + immediate;
+	else if(jumpEN) newPC <= src2;        // Here src2 is Rtarget / Address
+	else if(branchEN) newPC <= pc + $signed(src2) - 2; // Here src2 is the immediate 
 	else newPC <= pc + 1;
 end
 

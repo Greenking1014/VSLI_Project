@@ -8,9 +8,9 @@ module ALU #(parameter WIDTH = 16)
              output reg [WIDTH-1:0] result,
              output [7:0] PSR); 
 
-   wire     [WIDTH-1:0] b2, sum, slt;
+   wire     [WIDTH-1:0] b2, sum;
    reg Z,C,F,N,L; 
-   assign b2 = alucont[3] ? ~b:b; // looks at MSB to determined signed or unsigned
+   assign b2 = (alucont[3]) ? ~b:b; // looks at MSB to determined signed or unsigned
    assign sum = a + b2 + alucont[3];
  
    always@(*)
@@ -60,6 +60,20 @@ module ALU #(parameter WIDTH = 16)
             if(a < sum) C <= 1;
          end
          4'b0011: result <= a ^ b;    // logical XOR
+         4'b1011: begin // CMP
+            result <= sum;    // Sub
+            //setting  sign Flag
+            if(sum[WIDTH-1] == 1'b1) N <= 1;
+           
+            //setting Zero Flag
+            if(sum == 16'h0000) Z <= 1;
+          
+            //setting LOW Flag
+            if (a < b) L <= 1;
+         end
+         4'b1101: begin // MOV
+            result <= b;
+         end
          default: result <= sum; // should never happen
       endcase
    end

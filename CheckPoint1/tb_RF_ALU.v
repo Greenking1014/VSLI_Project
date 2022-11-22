@@ -56,12 +56,15 @@ module tb_RF_ALU();
 		if(result != 16'haaaa) $display("result is wrong, value obtained %h",result);
 		else $display("AND operation works correctly in the datapath");
 
-		// Testing Sum
+		// Testing large unsigned number and negative number
 		# CLK_PERIOD;
 		aluControl = 4'b0101;
 		
 		if(result != 16'hffff) $display("result is wrong, value obtained %h",result);
 		else $display("SUM operation works correctly in the datapath");
+
+
+		
 
 
 	 end

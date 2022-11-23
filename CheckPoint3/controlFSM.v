@@ -12,7 +12,7 @@ module controlFSM  (
     /// Stages of Execution parameters Start
     localparam FETCH = 5'h0, DECODE = 5'h1,FETCH2 = 5'h11;
     localparam ITYPEEX = 5'h3, ITYPEWR = 5'h4;
-    localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6 , SBWR2 = 5'h14;
+    localparam SHIFTEX = 5'h5, SHIFTWR = 5'h6 , SBWR2 = 5'h14, SBWR3 = 5'h17;
     localparam LBRD = 5'h7, LBWR = 5'h8, LBWR2 = 5'h12, LBWR3 = 5'h16;
     localparam SBWR = 5'h9;
     localparam RTYPEEX = 5'ha, RTYPEWR = 5'hb;
@@ -88,7 +88,8 @@ module controlFSM  (
             LBWR3:  nextstate <= FETCH;
 				
             SBWR:    nextstate <= SBWR2;
-				SBWR2:    nextstate <= FETCH;
+				SBWR2:   nextstate <= SBWR3;
+				SBWR3:	nextstate <= FETCH;
             
             RTYPEEX: nextstate <= RTYPEWR;
             RTYPEWR: nextstate <= FETCH;
@@ -188,7 +189,12 @@ always @(*) begin
                 end
 				SBWR2:
 					begin
-                    end
+						updateAddress <= 0;
+						wren_a <= 1;
+				   end
+				SBWR3:
+					begin
+					end
             RTYPEEX: 
                 begin
                     ALUcontrol <= opCode2;

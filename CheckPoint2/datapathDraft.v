@@ -50,7 +50,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h
 	
 	// registers for results
 	flopenr #(WIDTH, INSTRUCTION_MEM) pcregUnit(clk,reset,PCEN,aluResult2,pc); //enable based
-	flopenr #(8) PSRreg(clk,reset,PSREN,PSRresult,PSROut);	// out to the control unit
+	flopenr #(8, 8'h00) PSRreg(clk,reset,PSREN,PSRresult,PSROut);	// out to the control unit
 	flopenr #(WIDTH, 16'h0000) instrReg(clk,reset,nextInstruction,memdata,instr);
 	flopenr #(WIDTH, 16'h0000) resultReg(clk,reset,resultEn,newResult,result);
 	flopenr #(WIDTH, 16'h0000) immediateReg(clk, reset, immediateRegEN, immediate, immediateRegVal);

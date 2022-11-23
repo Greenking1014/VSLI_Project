@@ -38,10 +38,25 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0
    //   write third port on rising edge of clock
    always @(posedge clk) begin
       if(regwrite) RAM[ra1] <= wd;
-//      if(~reset) begin
-//         RAM[SP] <= DATA_STACK;
-//         RAM[ZR] <= 16'h0000;
-//      end
+      if(~reset) begin
+         RAM[SP] <= DATA_STACK;
+			RAM[RA] <= 16'h0000;
+			
+			RAM[13] <= 16'h0000;
+			RAM[12] <= 16'h0000;
+			RAM[11] <= 16'h0000;
+			RAM[10] <= 16'h0000;
+			RAM[9] <= 16'h0000;
+			RAM[8] <= 16'h0000;
+			RAM[7] <= 16'h0000;
+			RAM[6] <= 16'h0000;
+			RAM[5] <= 16'h0000;
+			RAM[3] <= 16'h0000;
+			RAM[2] <= 16'h0000;
+			RAM[1] <= 16'h0000;
+
+         RAM[ZR] <= 16'h0000;
+      end
    end
    // register 0 is hardwired to 0 //TODO, WHAT SHOULD WE DO ABOUT THIS?(keeps it as is?) (QUESTIONS: what should we do with register 0?)
    assign rd1 = ra1 ? RAM[ra1] : 0;

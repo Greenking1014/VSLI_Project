@@ -15,7 +15,7 @@ module mem_cpu(
 	reg [15:0] segValue = 16'h0000;
 	//reg [15:0] data_b = 16'b0;
 
-	reg [3:0] segCode0, segCode1, segCode2, segCode3;
+	wire [3:0] segCode0, segCode1, segCode2, segCode3;
 // instantiate devices to be tested 
 // wire nonclk = ~clk;
 	localparam INSTRUCTION_MEM = 16'h0000, INTERRUPT_CONTROL = 16'h5FFF, DATA_STACK = 16'h6FFE, IO_MEM = 16'hCFFD; // INSTRUCTION and DATA sections are of the same size (0x5FFE addresses).
@@ -113,14 +113,13 @@ module mem_cpu(
 		if(~reset)
 			segValue <= 16'h0000;
 	end
-	always @(posedge clk) begin
-		{segCode3, segCode2, segCode1, segCode0} <= segValue;
-	
-		if(~reset) begin
-			{segCode3, segCode2, segCode1, segCode0} <= 16'h0000;
-		end
-	end
+
 	assign memOut_A = (address_in_IO_A) ? {{8{1'b0}},switches}: q_a;
 	assign memOut_B = (address_in_IO_B) ? {{8{1'b0}},switches}: q_b;
+	
+	assign segCode3 = (wren_a) ? data_a[15:12]: segCode3;
+	assign segCode2 = (wren_a) ? data_a[11:8]: segCode2;
+	assign segCode1 = (wren_a) ? data_a[7:4]: segCode1;
+	assign segCode0 = (wren_a) ? data_a[3:0]: segCode0;
 
 endmodule

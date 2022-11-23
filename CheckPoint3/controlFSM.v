@@ -88,8 +88,8 @@ module controlFSM  (
             LBWR3:  nextstate <= FETCH;
 				
             SBWR:    nextstate <= SBWR2;
-				SBWR2:   nextstate <= SBWR3;
-				SBWR3:	nextstate <= FETCH;
+			SBWR2:   nextstate <= FETCH;
+				// SBWR3:	nextstate <= FETCH;
             
             RTYPEEX: nextstate <= RTYPEWR;
             RTYPEWR: nextstate <= FETCH;
@@ -184,17 +184,18 @@ always @(*) begin
             SBWR:
                 begin
                     storeReg <= 1;
-						  updateAddress <= 0;
+					updateAddress <= 0;
                     wren_a <= 1;
                 end
 				SBWR2:
 					begin
-						updateAddress <= 0;
-						wren_a <= 1;
+                    // storeReg <= 1;
+                    // updateAddress <= 0;
+                    // wren_a <= 1;
 				   end
-				SBWR3:
-					begin
-					end
+				// SBWR3:
+				// 	begin
+				// 	end
             RTYPEEX: 
                 begin
                     ALUcontrol <= opCode2;

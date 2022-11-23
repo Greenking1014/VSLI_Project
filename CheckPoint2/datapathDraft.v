@@ -81,7 +81,7 @@ module datapathDraft #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h
 	mux2 #(WIDTH) dataToStore(result, regData1, StoreReg, memOut);
 	 
 	// pc counter doesnt care about PSR for now
-	pcALU #(WIDTH) pc_ALU(src1,src2,jumpEN,jalEN,BranchEN,Rlink,aluResult2);
+	pcALU #(WIDTH, INTERRUPT_CONTROL) pc_ALU(src1,src2,jumpEN,jalEN,BranchEN,Rlink,aluResult2);
 
 	// Operational units
 	shifter #(WIDTH) shifterUnit(src1, src2, shiftAmt, shifterControl, shiftOut);

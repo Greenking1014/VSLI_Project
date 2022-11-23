@@ -2,7 +2,7 @@
 *   Authors: Jordy Larrea, Brittney Morales, Misael Nava, Cristian Tapiero
 */
 
-module pcALU #(parameter WIDTH = 16)(
+module pcALU #(parameter WIDTH = 16, parameter INTERRUPT_CONTROL = 16'h5FFF)(
 	input [WIDTH-1: 0]  pc,
 	input [WIDTH-1: 0]  src2,
 	input					  jumpEN,
@@ -36,7 +36,12 @@ always@(*) begin
 	end
 	else if(jumpEN) newPC <= src2;        // Here src2 is Rtarget / Address
 	else if(branchEN) newPC <= pc + $signed(src2) - 2; // Here src2 is the immediate 
-	else newPC <= pc + 1;
+	else begin
+		newPC  <= pc + 1;
+		if(pc + 1 > INTERRUPT_CONTROL - 1) begin
+			newPC <= pc;
+		end
+	end
 end
 
 assign Rlink = RlinkBack;

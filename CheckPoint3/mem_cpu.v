@@ -117,9 +117,9 @@ module mem_cpu(
 	assign memOut_A = (address_in_IO_A) ? {{8{1'b0}},switches}: q_a;
 	assign memOut_B = (address_in_IO_B) ? {{8{1'b0}},switches}: q_b;
 	
-	assign segCode3 = (wren_a) ? data_a[15:12]: segCode3;
-	assign segCode2 = (wren_a) ? data_a[11:8]: segCode2;
-	assign segCode1 = (wren_a) ? data_a[7:4]: segCode1;
-	assign segCode0 = (wren_a) ? data_a[3:0]: segCode0;
+	assign segCode3 = (address_in_IO_A && wren_a) ? data_a[15:12]: segCode3;
+	assign segCode2 = (address_in_IO_A && wren_a) ? data_a[11:8]: segCode2;
+	assign segCode1 = (address_in_IO_A && wren_a) ? data_a[7:4]: segCode1;
+	assign segCode0 = (address_in_IO_A && wren_a) ? data_a[3:0]: segCode0;
 
 endmodule

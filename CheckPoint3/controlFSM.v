@@ -189,7 +189,7 @@ always @(*) begin
                 end
 				SBWR2:
 					begin
-                    // storeReg <= 1;
+                    storeReg <= 1;
                     // updateAddress <= 0;
                     // wren_a <= 1;
 				   end

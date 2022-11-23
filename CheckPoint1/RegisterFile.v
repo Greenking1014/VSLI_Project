@@ -26,8 +26,9 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0
 	$display("Loading register file");
 	// you'll need to change the path to this file! //TODO: change the filepath? to a relative path
 	//$readmemh("C:\\Users\\18019\\Documents\\UofU\\FALL2022\\CS3710\\16bitCPU\\sixteenBitComputer\\CheckPoint1\\initReg.dat",RAM); 
-	$readmemh("C:\\Users\\brifu\\OneDrive\\Documents\\Fall 2022\\ECE 3710\\final project\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
-	//$readmemh("C:\\Users\\misae\\OneDrive\\Documents\\GitHub\\3710ProjectClone\\CheckPoint3\\InitReg.dat",RAM); 
+	//$readmemh("C:\\Users\\brifu\\OneDrive\\Documents\\Fall 2022\\ECE 3710\\final project\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
+	//$readmemh("C:\\Users\\misae\\OneDrive\\Documents\\GitHub\\3710ProjectClone\\CheckPoint3\\InitReg.dat",RAM);
+	$readmemh("D:\\Project_repos\\repos\\sixteenBitComputer\\CheckPoint3\\InitReg.dat", RAM);
 	$display("done with RF load"); 
 	end 
 
@@ -37,10 +38,25 @@ module RegisterFile #(parameter WIDTH = 16, REGBITS = 4, INSTRUCTION_MEM = 16'h0
    //   write third port on rising edge of clock
    always @(posedge clk) begin
       if(regwrite) RAM[ra1] <= wd;
-//      if(~reset) begin
-//         RAM[SP] <= DATA_STACK;
-//         RAM[ZR] <= 16'h0000;
-//      end
+      if(~reset) begin
+         RAM[SP] <= DATA_STACK;
+			RAM[RA] <= 16'h0000;
+			
+			RAM[13] <= 16'h0000;
+			RAM[12] <= 16'h0000;
+			RAM[11] <= 16'h0000;
+			RAM[10] <= 16'h0000;
+			RAM[9] <= 16'h0000;
+			RAM[8] <= 16'h0000;
+			RAM[7] <= 16'h0000;
+			RAM[6] <= 16'h0000;
+			RAM[5] <= 16'h0000;
+			RAM[3] <= 16'h0000;
+			RAM[2] <= 16'h0000;
+			RAM[1] <= 16'h0000;
+
+         RAM[ZR] <= 16'h0000;
+      end
    end
    // register 0 is hardwired to 0 //TODO, WHAT SHOULD WE DO ABOUT THIS?(keeps it as is?) (QUESTIONS: what should we do with register 0?)
    assign rd1 = ra1 ? RAM[ra1] : 0;

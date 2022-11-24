@@ -99,31 +99,8 @@ set_location_assignment PIN_AB28 -to seg3[4]
 set_location_assignment PIN_AB25 -to seg3[5]
 set_location_assignment PIN_AB22 -to seg3[6]
 set_location_assignment PIN_AF14 -to clk
-set_global_assignment -name SDC_FILE clock.sdc
-set_global_assignment -name VERILOG_FILE hexTo7Seg_3710.v
-set_global_assignment -name VERILOG_FILE EXRAM_bb.v
-set_global_assignment -name VERILOG_FILE EXRAM.v
-set_global_assignment -name VERILOG_FILE tb_mem_cpu.v
-set_global_assignment -name VERILOG_FILE mem_cpu.v
-set_global_assignment -name VERILOG_FILE arrozYlecheCPU.v
-set_global_assignment -name VERILOG_FILE controlFSM.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/shifter.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/RF_ALU.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/RegisterFile.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopenr.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/pcALU.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux4.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux2.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/fpALU.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopr.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint1/ALU.v
-set_global_assignment -name MIF_FILE RAM.mif
-set_global_assignment -name VERILOG_FILE ../CheckPoint2/datapathDraft.v
-set_global_assignment -name VERILOG_FILE ../CheckPoint2/Datapath_Memory.v
-set_global_assignment -name SOURCE_FILE InitReg.dat
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp1.stp
-set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_ENTITY_NAME sld_signaltap -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_clk -to clk -section_id auto_signaltap_0
@@ -267,5 +244,28 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[6] -t
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[10] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[28] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[29] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
+set_global_assignment -name MIF_FILE RAM.mif
+set_global_assignment -name SDC_FILE clock.sdc
+set_global_assignment -name VERILOG_FILE hexTo7Seg_3710.v
+set_global_assignment -name VERILOG_FILE EXRAM_bb.v
+set_global_assignment -name VERILOG_FILE EXRAM.v
+set_global_assignment -name VERILOG_FILE tb_mem_cpu.v
+set_global_assignment -name VERILOG_FILE mem_cpu.v
+set_global_assignment -name VERILOG_FILE arrozYlecheCPU.v
+set_global_assignment -name VERILOG_FILE controlFSM.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/shifter.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/RF_ALU.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/RegisterFile.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopenr.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/pcALU.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux4.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/mux2.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/fpALU.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/flopr.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint1/ALU.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint2/datapathDraft.v
+set_global_assignment -name VERILOG_FILE ../CheckPoint2/Datapath_Memory.v
+set_global_assignment -name SOURCE_FILE InitReg.dat
+set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
 set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -6,7 +6,7 @@ JedecChain;
 	P ActionCode(Ign)
 		Device PartName(SOCVHPS) MfrSpec(OpMask(0));
 	P ActionCode(Cfg)
-		Device PartName(5CSEMA5F31) Path("D:/Project_repos/repos/sixteenBitComputer/CheckPoint3/output_files/") File("CheckPoint3.sof") MfrSpec(OpMask(1));
+		Device PartName(5CSEMA5F31) Path("C:/Users/18019/Documents/UofU/FALL2022/CS3710/16bitCPU/sixteenBitComputer/CheckPoint3/output_files/") File("CheckPoint3.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

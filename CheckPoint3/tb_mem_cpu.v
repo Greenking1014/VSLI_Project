@@ -5,29 +5,17 @@ reg clk,reset;
 reg [15:0] data_b;
 reg [7:0] switches;
 wire [6:0] seg0, seg1, seg2, seg3;
-wire wren_a,wren_b;
-wire [15:0]	address_a,
-    address_b,
-	data_a,
-	q_a,
-	q_b;
+// wire wren_a,wren_b;
+// wire [15:0]	address_a,
+//     address_b,
+// 	data_a,
+// 	q_a,
+// 	q_b;
 
 mem_cpu UUT(
-	.clk(clk),
-	.reset(reset),
-	.switches(switches),
-	.data_b(data_b),
-	.wren_a(wren_a),
-	.wren_b(wren_b),
-	.address_a(address_a),
-    .address_b(address_b),
-	.data_a(data_a),
-	.q_a(q_a),
-	.q_b(q_b),
-	.seg0(seg0),
-	.seg1(seg1),
-	.seg2(seg2),
-	.seg3(seg3)
+	clk, reset,
+	switches,
+	seg0, seg1, seg2, seg3 
 );
 
 localparam CLK_PERIOD = 10;
